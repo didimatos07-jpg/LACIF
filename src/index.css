@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Space Grotesk", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+  
+  --color-neon-blue: #007BFF;
+  --color-neon-yellow: #FFD000;
+  --color-dark-bg: #050505;
+  --color-cyber-blue: #081421;
+}
+
+/* Custom animated glow of neon-grid and scanner lines */
+@layer utilities {
+  .cyber-grid {
+    background-size: 40px 40px;
+    background-image: linear-gradient(rgba(0, 123, 255, 0.1) 1px, transparent 1px),
+                      linear-gradient(90deg, rgba(0, 123, 255, 0.1) 1px, transparent 1px);
+  }
+  
+  .glow-blue {
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.7);
+  }
+
+  .glow-yellow {
+    box-shadow: 0 0 15px rgba(255, 208, 0, 0.5);
+    text-shadow: 0 0 10px rgba(255, 208, 0, 0.7);
+  }
+
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  }
+  
+  .glassmorphism-blue {
+    background: rgba(0, 123, 255, 0.06);
+    backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid rgba(0, 123, 255, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  }
+
+  .glassmorphism-yellow {
+    background: rgba(255, 208, 0, 0.04);
+    backdrop-filter: blur(16px) saturate(120%);
+    border: 1px solid rgba(255, 208, 0, 0.25);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
+  }
+  
+  .glassmorphism-light {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+  }
+}
+
+/* Animating scanning lasers */
+@keyframes laserSweep {
+  0% {
+    top: 0%;
+  }
+  50% {
+    top: 100%;
+  }
+  100% {
+    top: 0%;
+  }
+}
+
+.animate-laser {
+  animation: laserSweep 4s linear infinite;
+}
+
+/* Audio wave simulator or indicator active */
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 0.3;
+    transform: scale(0.98);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.02);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulseGlow 3s ease-in-out infinite;
+}
+
+/* Subtle holographic distortion filter */
+@keyframes holo {
+  0% {
+    text-shadow: 0.5px 0 0 rgba(255,0,0,0.4), -0.5px 0 0 rgba(0,0,255,0.4);
+  }
+  50% {
+    text-shadow: -1px 0 0 rgba(255,0,0,0.3), 1px 0 0 rgba(0,0,255,0.3);
+  }
+  100% {
+    text-shadow: 0.5px 0 0 rgba(255,0,0,0.4), -0.5px 0 0 rgba(0,0,255,0.4);
+  }
+}
+
+.holo-text {
+  animation: holo 2s infinite alternate;
+}
