@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Menu, X, Shield, Lock, Fingerprint } from 'lucide-react';
+import { Menu, X, Shield, Lock } from 'lucide-react';
+import LacifEmblem from './LacifEmblem.tsx';
 
 interface HeaderProps {
   onAdminClick: () => void;
@@ -41,9 +42,8 @@ export default function Header({ onAdminClick, activeSection, onNavigate }: Head
             onClick={() => handleLinkClick('inicio')}
             className="flex items-center gap-2 cursor-pointer group"
           >
-            <div className="relative flex items-center justify-center h-10 w-10 rounded-lg border border-blue-500/30 bg-blue-950/20 group-hover:border-yellow-400 group-hover:shadow-[0_0_10px_#FFD000] transition-all duration-300">
-              <Fingerprint className="h-6 w-6 text-blue-400 group-hover:text-yellow-400 transition-colors duration-300" />
-              <div className="absolute inset-0 h-full w-full rounded-lg border border-transparent group-hover:border-yellow-400/20 animate-pulse-glow" />
+            <div className="relative flex items-center justify-center h-14 w-14">
+              <LacifEmblem className="h-14 w-14" />
             </div>
             <div>
               <h1 className="font-display font-bold tracking-wider text-sm leading-none text-white">

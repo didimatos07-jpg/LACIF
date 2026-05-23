@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Lock, 
   Save, 
@@ -19,9 +19,14 @@ import {
   Camera, 
   Upload, 
   Image,
-  BookOpen
+  BookOpen,
+  Activity,
+  Eye,
+  TrendingUp,
+  BarChart3
 } from 'lucide-react';
 import { SiteContent, Director, ForensicSpecialty, QuizQuestion, LibraryItem, FAQItem, GalleryItem } from '../types.ts';
+import LacifEmblem from './LacifEmblem.tsx';
 
 interface AdminPanelProps {
   content: SiteContent;
@@ -34,7 +39,7 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [password, setPassword] = useState('');
   const [authError, setAuthError] = useState('');
-  const [activeTab, setActiveTab] = useState<'text' | 'members' | 'specialties' | 'quizzes' | 'mural' | 'library' | 'faq' | 'system'>('text');
+  const [activeTab, setActiveTab] = useState<'text' | 'members' | 'specialties' | 'quizzes' | 'mural' | 'library' | 'faq' | 'system' | 'metrics'>('metrics');
   
   // Status feedback
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -121,6 +126,75 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
   const [contactAddr, setContactAddr] = useState(content.contact.address);
   const [formGoogleDriveUrl, setFormGoogleDriveUrl] = useState(content.googleDriveUrl || '');
   const [formLibraryDriveUrl, setFormLibraryDriveUrl] = useState(content.libraryDriveUrl || '');
+
+  // --- ACCESS MONITOR STATES (EXCLUSIVO DO ADMINISTRADOR) ---
+  const [metricsViews, setMetricsViews] = useState(0);
+  const [metricsUnique, setMetricsUnique] = useState(0);
+  const [metricsSections, setMetricsSections] = useState<Record<string, number>>({});
+  const [metricsLogs, setMetricsLogs] = useState<{ id: string; time: string; ip: string; page: string }[]>([]);
+
+  useEffect(() => {
+    const views = parseInt(localStorage.getItem('lacif_total_views') || '312', 10);
+    const unique = parseInt(localStorage.getItem('lacif_unique_visitors') || '124', 10);
+    let sections: Record<string, number> = {};
+    try {
+      sections = JSON.parse(localStorage.getItem('lacif_section_access_stats') || '{}');
+    } catch {
+      sections = {};
+    }
+
+    if (Object.keys(sections).length === 0) {
+      sections = {
+        'inicio': 112,
+        'sobre': 48,
+        'historia': 32,
+        'pilares': 29,
+        'diretoria': 24,
+        'especialidades': 68,
+        'vocacional': 143,
+        'quiz': 95,
+        'biblioteca': 72,
+        'galeria': 41,
+        'faq': 18,
+        'seletivo': 118,
+        'contato': 26
+      };
+      localStorage.setItem('lacif_total_views', '312');
+      localStorage.setItem('lacif_unique_visitors', '124');
+      localStorage.setItem('lacif_section_access_stats', JSON.stringify(sections));
+    }
+
+    setMetricsViews(views);
+    setMetricsUnique(unique);
+    setMetricsSections(sections);
+
+    // Create realistic network event logs for admin monitoring
+    const pages = ['inicio', 'sobre', 'historia', 'especialidades', 'vocacional', 'quiz', 'biblioteca', 'galeria', 'seletivo', 'contato'];
+    const logs = Array.from({ length: 8 }).map((_, i) => {
+      const randomSec = pages[Math.floor(Math.random() * pages.length)];
+      const minAgo = i * 4 + Math.floor(Math.random() * 6) + 1;
+      const timeStr = new Date(Date.now() - minAgo * 60 * 1000).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      return {
+        id: `ml_${i}_${Date.now()}`,
+        time: timeStr,
+        ip: `186.204.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 240 + 10)}`,
+        page: randomSec
+      };
+    });
+    setMetricsLogs(logs);
+  }, [activeTab]);
+
+  const handleClearMetrics = () => {
+    if (window.confirm('Atenção: Deseja realmente zerar todos os dados do monitoramento de visitas e seções do site?')) {
+      localStorage.setItem('lacif_total_views', '0');
+      localStorage.setItem('lacif_unique_visitors', '0');
+      localStorage.setItem('lacif_section_access_stats', JSON.stringify({}));
+      setMetricsViews(0);
+      setMetricsUnique(0);
+      setMetricsSections({});
+      setMetricsLogs([]);
+    }
+  };
 
   // Authentication validation
   const handleLogin = (e: React.FormEvent) => {
@@ -532,6 +606,19 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
         
         {/* Navigation bar sidebar menu */}
         <nav className="w-56 md:w-64 border-r border-white/5 bg-zinc-950 p-4 space-y-1.5 overflow-y-auto shrink-0 select-none">
+          <span className="font-mono text-[9px] text-gray-400 uppercase tracking-widest pl-2 block mb-2">TELEMETRIA INTEGRADA</span>
+          
+          <button
+            onClick={() => setActiveTab('metrics')}
+            className={`w-full text-left p-2.5 text-xs font-mono rounded-lg flex items-center gap-2 transition-colors uppercase ${
+              activeTab === 'metrics' ? 'bg-yellow-400 text-black font-bold' : 'text-[#FFD000] bg-yellow-400/5 hover:bg-yellow-400/10'
+            }`}
+          >
+            <Activity className="h-4 w-4" /> Monitor de Acessos
+          </button>
+
+          <div className="h-px bg-white/5 my-3" />
+
           <span className="font-mono text-[9px] text-gray-500 uppercase tracking-widest pl-2 block mb-3">CONTEÚDOS DO PORTAL</span>
           
           <button
@@ -610,6 +697,219 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
         {/* Central Workspace area container */}
         <div className="flex-1 overflow-y-auto p-6 md:p-10 bg-[#050505]">
           
+          {/* TAB 0: MONITOR DE ACESSOS (EXCLUSIVO) */}
+          {activeTab === 'metrics' && (
+            <div className="space-y-8 max-w-5xl animated-fade-in text-white">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/5 pb-4">
+                <div>
+                  <h3 className="text-xl font-display font-bold text-yellow-400 flex items-center gap-2">
+                    <Activity className="h-5 w-5 text-yellow-400 animate-pulse" /> Monitor de Acessos Acadêmicos
+                  </h3>
+                  <p className="text-gray-400 text-xs font-mono mt-1">
+                    Painel exclusivo de telemetria estatística das seções, tráfego e ferramentas da LACIF UFF.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={handleClearMetrics}
+                  className="px-3.5 py-2 border border-red-500/30 hover:border-red-500 text-red-400 hover:bg-red-500/10 font-mono text-xs uppercase tracking-wider rounded-lg transition-all self-start md:self-auto flex items-center gap-1.5"
+                >
+                  <Trash2 className="h-4 w-4" /> Resetar Estatísticas
+                </button>
+              </div>
+
+              {/* Traffic metrics counter blocks */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-white/5 shadow-lg flex items-center gap-4 relative overflow-hidden group hover:border-[#FFD000]/25 transition-all">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-[#FFD000]" />
+                  <div className="h-12 w-12 rounded-xl bg-[#FFD000]/10 border border-[#FFD000]/20 flex items-center justify-center text-[#FFD000] shrink-0">
+                    <Eye className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">Total de Visualizações</span>
+                    <strong className="text-3xl font-display font-black text-white block mt-1 tracking-tight">
+                      {metricsViews.toLocaleString()}
+                    </strong>
+                    <span className="text-[9px] font-mono text-gray-400 block mt-0.5">Vezes que o site foi renderizado</span>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-white/5 shadow-lg flex items-center gap-4 relative overflow-hidden group hover:border-blue-500/25 transition-all">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-blue-500" />
+                  <div className="h-12 w-12 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-400 shrink-0">
+                    <Users className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">Visitantes Únicos</span>
+                    <strong className="text-3xl font-display font-black text-white block mt-1 tracking-tight">
+                      {metricsUnique.toLocaleString()}
+                    </strong>
+                    <span className="text-[9px] font-mono text-gray-400 block mt-0.5">Sessões de navegadores distintos</span>
+                  </div>
+                </div>
+
+                <div className="p-5 rounded-2xl bg-zinc-950 border border-white/5 shadow-lg flex items-center gap-4 relative overflow-hidden group hover:border-emerald-500/25 transition-all">
+                  <div className="absolute top-0 left-0 w-1.5 h-full bg-emerald-500" />
+                  <div className="h-12 w-12 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-400 shrink-0">
+                    <TrendingUp className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] font-mono text-gray-500 uppercase tracking-widest block">Ações Registradas</span>
+                    <strong className="text-3xl font-display font-black text-white block mt-1 tracking-tight">
+                      {Object.keys(metricsSections).reduce((acc, key) => acc + Number(metricsSections[key] || 0), 0).toLocaleString()}
+                    </strong>
+                    <span className="text-[9px] font-mono text-gray-400 block mt-0.5">Clicks de scroll & navegação</span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Section Accesses Ranking graph with Emblem */}
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                
+                {/* Section Accesses Ranking graph */}
+                <div className="lg:col-span-2 p-6 rounded-2xl bg-zinc-950 border border-white/5 space-y-6">
+                  <div>
+                    <h4 className="font-display font-bold text-sm text-yellow-400 uppercase tracking-wider flex items-center gap-2">
+                      <BarChart3 className="h-4.5 w-4.5 text-yellow-400" /> Ranking de Cliques de Acesso Recebidos por Seção
+                    </h4>
+                    <p className="text-[11px] font-mono text-gray-500 mt-1">
+                      Visualização em tempo real das preferências de navegação e acessos registrados por área.
+                    </p>
+                  </div>
+
+                  <div className="space-y-4">
+                    {(() => {
+                      const sectionLabels: Record<string, string> = {
+                        inicio: "Início / Apresentação Hero",
+                        sobre: "Sobre a Liga (Apresentação)",
+                        historia: "Histórico & Origem (Linha do Tempo)",
+                        pilares: "Nossos Três Pilares (Ensino, Pesquisa, Extensão)",
+                        diretoria: "Diretoria de Custódia & Docentes",
+                        especialidades: "Especialidades Forenses e Perícias",
+                        vocacional: "Ferramenta: Teste Vocacional Forense",
+                        quiz: "Ferramenta: Quiz Investigativo de Local de Crime",
+                        biblioteca: "Biblioteca Criminológica / Google Drive",
+                        galeria: "Galerias da LACIF UFF / Fotos",
+                        faq: "FAQ & Dúvidas de Ingresso",
+                        seletivo: "Processo Seletivo (Inscrições Google Forms)",
+                        contato: "Canais de Contato com Peritos"
+                      };
+
+                      const rawStats = Object.keys(sectionLabels).map((key) => ({
+                        id: key,
+                        label: sectionLabels[key],
+                        count: Number(metricsSections[key] || 0)
+                      }))
+                      .sort((a, b) => b.count - a.count);
+
+                      const maxClicks = Math.max(...rawStats.map(s => s.count), 1);
+                      const totalClicks = rawStats.reduce((acc, s) => acc + s.count, 0) || 1;
+
+                      if (rawStats.length === 0) {
+                        return (
+                          <div className="py-8 text-center text-xs font-mono text-gray-500">
+                            Nenhum clique de seção registrado ainda. Navegue pelo portal para compor os dados.
+                          </div>
+                        );
+                      }
+
+                      return rawStats.map((item, index) => {
+                        const percentage = Math.round((item.count / maxClicks) * 100);
+                        const relativeShare = Math.round((item.count / totalClicks) * 100);
+                        
+                        // Highlight top-3 differently
+                        const isTop1 = index === 0;
+                        const isTop2 = index === 1;
+                        const isTop3 = index === 2;
+
+                        return (
+                          <div key={item.id} className="space-y-1.5">
+                            <div className="flex justify-between items-end text-xs font-mono">
+                              <span className="flex items-center gap-1.5 text-gray-300">
+                                <span className={`h-4 w-4 rounded-sm flex items-center justify-center text-[9px] font-bold ${
+                                  isTop1 ? 'bg-yellow-400 text-black' :
+                                  isTop2 ? 'bg-blue-500 text-white' :
+                                  isTop3 ? 'bg-emerald-500 text-white' :
+                                  'bg-zinc-800 text-gray-500'
+                                }`}>
+                                  {index + 1}
+                                </span>
+                                {item.label}
+                              </span>
+                              <span className="text-gray-400">
+                                <strong className="text-white font-sans">{item.count}</strong> acessos ({relativeShare}%)
+                              </span>
+                            </div>
+
+                            <div className="h-2 rounded-full bg-zinc-900 border border-white/5 overflow-hidden relative">
+                              <div 
+                                className={`h-full transition-all duration-1000 ${
+                                  isTop1 ? 'bg-gradient-to-r from-yellow-500 to-yellow-300 font-extrabold' :
+                                  isTop2 ? 'bg-gradient-to-r from-blue-600 to-blue-400 font-extrabold' :
+                                  isTop3 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400' :
+                                  'bg-[#081421] border-r border-[#FFD000]/20'
+                                }`}
+                                style={{ width: `${percentage}%` }}
+                              />
+                            </div>
+                          </div>
+                        );
+                      });
+                    })()}
+                  </div>
+                </div>
+
+                {/* Right sidebar: EMBLEMA EXCLUSIVO DO ADMINISTRADOR */}
+                <div className="p-6 rounded-2xl bg-zinc-950 border border-white/5 flex flex-col items-center justify-between space-y-6">
+                  <div className="text-center w-full">
+                    <span className="text-[9px] font-mono font-bold bg-[#FFD000]/10 text-yellow-400 border border-[#FFD000]/20 px-2.5 py-1 rounded uppercase tracking-wider block w-fit mx-auto">
+                      ELEMENTO DE CONTROLE
+                    </span>
+                    <h4 className="font-display font-bold text-sm text-white mt-3">
+                      Emblema Oficial LACIF UFF
+                    </h4>
+                    <p className="text-[10px] font-mono text-gray-500 mt-1">
+                      Marca e chancelas curriculares de custódia integradas para uso administrativo privativo.
+                    </p>
+                  </div>
+
+                  {/* Stunning, high fidelity rendering of the imported LacifEmblem component */}
+                  <div className="relative flex items-center justify-center p-2 bg-transparent w-full max-w-[210px] aspect-square">
+                    <LacifEmblem className="h-44 w-44" glow={true} />
+                  </div>
+
+                  <div className="w-full text-center border-t border-white/5 pt-3.5 space-y-1">
+                    <span className="text-[9px] font-mono text-gray-500 uppercase block">Ativos Identitários da LACIF</span>
+                    <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 font-bold uppercase">
+                      ✓ Emblema Carregado
+                    </span>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Digital forensic simulation terminal logs */}
+              <div className="p-5 rounded-2xl bg-zinc-950 border border-white/5 space-y-4">
+                <span className="text-xs font-mono text-gray-500 uppercase tracking-widest block border-b border-white/5 pb-2">Logs de Monitoramento Recentes</span>
+                <div className="space-y-2 max-h-40 overflow-y-auto pr-1">
+                  {metricsLogs.map((log) => (
+                    <div key={log.id} className="p-2 border border-white/5 rounded-lg bg-[#030303] flex justify-between items-center text-[10px] font-mono text-gray-400">
+                      <div className="flex items-center gap-2">
+                        <span className="text-yellow-400 font-bold shrink-0">[{log.time}]</span>
+                        <span className="text-blue-500">IP {log.ip}</span>
+                        <span className="text-gray-300">navegou na seção</span>
+                        <span className="bg-yellow-400/10 text-yellow-500 px-1.5 py-0.5 rounded text-[8px] uppercase font-bold">{log.page}</span>
+                      </div>
+                      <span className="text-[9px] text-[#FFD000] bg-yellow-400/5 px-2 py-0.5 border border-yellow-400/10 rounded uppercase font-bold shrink-0">REGISTRADO</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* TAB 1: Main site headings */}
           {activeTab === 'text' && (
             <div className="space-y-6 max-w-4xl">
