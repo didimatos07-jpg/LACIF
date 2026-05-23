@@ -39,6 +39,8 @@ import ForensicQuiz from './components/ForensicQuiz.tsx';
 import Library from './components/Library.tsx';
 import Gallery from './components/Gallery.tsx';
 import AdminPanel from './components/AdminPanel.tsx';
+import PoliceTape from './components/PoliceTape.tsx';
+import AmbientPoliceLights from './components/AmbientPoliceLights.tsx';
 
 export default function App() {
   const [content, setContent] = useState<SiteContent>(INITIAL_CONTENT);
@@ -46,6 +48,8 @@ export default function App() {
   const [showAdmin, setShowAdmin] = useState(false);
   const [activeFaq, setActiveFaq] = useState<string | null>(null);
   const [selectedSpecialty, setSelectedSpecialty] = useState<ForensicSpecialty | null>(null);
+  const [activeMapStage, setActiveMapStage] = useState<'preservacao' | 'fixacao' | 'coleta' | 'analise'>('preservacao');
+  const [activeActivityTab, setActiveActivityTab] = useState<'all' | 'simulado' | 'workshop' | 'seminario'>('all');
 
   // Load and cache State seamlessly
   useEffect(() => {
@@ -100,6 +104,11 @@ export default function App() {
       />
 
       <main className="flex-1 relative z-10">
+
+        {/* ================= AMBIENT NON-INTERACTIVE POLICE SIREN LAMPS ================= */}
+        <div className="pt-8 px-4 md:px-8">
+          <AmbientPoliceLights />
+        </div>
 
         {/* ================= HERO SECTION ================= */}
         <section id="inicio" className="relative min-h-[90vh] flex items-center justify-center p-4 md:p-8 pt-12 md:pt-20 border-b border-blue-500/10">
@@ -173,6 +182,8 @@ export default function App() {
           </div>
         </section>
 
+        {/* ================= POLICE TAPE SEPARATOR ================= */}
+        <PoliceTape rotated={true} />
 
         {/* ================= SOBRE A LIGA ================= */}
         <section id="sobre" className="py-20 px-4 md:px-8 bg-[#081421]/20 border-b border-blue-500/10">
@@ -486,6 +497,8 @@ export default function App() {
               ))}
             </div>
 
+
+
           </div>
         </section>
 
@@ -763,26 +776,35 @@ export default function App() {
                 Fale com Nossos Peritos
               </h3>
               <p className="text-gray-400 text-sm md:text-base leading-relaxed">
-                Mande um direct, e-mail técnico ou nos visite pessoalmente nos laboratórios parceiros do Valonguinho ou consultórios acadêmicos.
+                Mande uma mensagem direta ou e-mail institucional direto para os coordenadores e equipe de pesquisa forense da Liga.
               </p>
             </div>
 
-            {/* Social media card anchors */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-5xl mx-auto text-white">
+            {/* Optimized 3-column interactive contact layout */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-white">
               
               {/* Instagram Card */}
               <a 
                 href={content.contact.instagram}
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="p-6 rounded-2xl glassmorphism border border-white/10 hover:border-yellow-400/40 hover:shadow-[0_0_15px_rgba(255,208,0,0.15)] flex items-center gap-4 transition-all group cursor-pointer"
+                className="p-8 rounded-3xl glassmorphism border border-white/10 hover:border-yellow-400/40 hover:shadow-[0_0_20px_rgba(255,208,0,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
               >
-                <div className="bg-yellow-400/10 h-11 w-11 rounded-xl flex items-center justify-center text-yellow-500 border border-yellow-400/20 group-hover:bg-yellow-400 group-hover:text-black transition-colors shrink-0">
-                  <Instagram className="h-5 w-5" />
+                <div className="space-y-4">
+                  <div className="bg-yellow-400/10 h-12 w-12 rounded-2xl flex items-center justify-center text-yellow-500 border border-yellow-400/20 group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300 shrink-0">
+                    <Instagram className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Instagram Oficial</h4>
+                    <p className="text-lg font-sans font-bold text-white mt-1 group-hover:text-yellow-400 transition-colors">@lacifuff.oficial</p>
+                    <p className="text-xs text-gray-400 font-sans mt-2 leading-relaxed">
+                      Siga nossa página para acompanhar as análises, novidades das disciplinas e notícias de processos seletivos.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Instagram</h4>
-                  <p className="text-sm font-sans font-medium text-white group-hover:text-yellow-400 transition-colors">@lacifuff.oficial</p>
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-yellow-400 hover:text-yellow-300">
+                  <span>SEGUIR NO INSTAGRAM</span>
+                  <ArrowUpRight className="h-4 w-4" />
                 </div>
               </a>
 
@@ -791,63 +813,58 @@ export default function App() {
                 href={content.contact.youtube}
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="p-6 rounded-2xl glassmorphism border border-white/10 hover:border-blue-500/40 hover:shadow-[0_0_15px_rgba(0,123,255,0.15)] flex items-center gap-4 transition-all group cursor-pointer"
+                className="p-8 rounded-3xl glassmorphism border border-white/10 hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(0,123,255,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
               >
-                <div className="bg-blue-600/10 h-11 w-11 rounded-xl flex items-center justify-center text-blue-400 border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition-colors shrink-0">
-                  <Youtube className="h-5 w-5" />
+                <div className="space-y-4">
+                  <div className="bg-blue-600/10 h-12 w-12 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shrink-0">
+                    <Youtube className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Canal de Seminários</h4>
+                    <p className="text-lg font-sans font-bold text-white mt-1 group-hover:text-blue-400 transition-colors">LACIF UFF Forensics</p>
+                    <p className="text-xs text-gray-400 font-sans mt-2 leading-relaxed">
+                      Assista nossas aulas abertasgravadas, simpósios científicos passados, debates em mesa redonda e webinars didáticos.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">YouTube</h4>
-                  <p className="text-sm font-sans font-medium text-white group-hover:text-blue-400 transition-colors">LACIF UFF Forensics</p>
-                </div>
-              </a>
-
-              {/* WhatsApp Card */}
-              <a 
-                href={content.contact.whatsapp}
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="p-6 rounded-2xl glassmorphism border border-white/10 hover:border-yellow-400/40 hover:shadow-[0_0_15px_rgba(255,208,0,0.15)] flex items-center gap-4 transition-all group cursor-pointer"
-              >
-                <div className="bg-yellow-400/10 h-11 w-11 rounded-xl flex items-center justify-center text-yellow-500 border border-yellow-400/20 group-hover:bg-yellow-400 group-hover:text-black transition-colors shrink-0">
-                  <MessageSquare className="h-5 w-5" />
-                </div>
-                <div>
-                  <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">WhatsApp</h4>
-                  <p className="text-sm font-sans font-medium text-white group-hover:text-yellow-400 transition-colors">Enviar Online</p>
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-blue-400 hover:text-white">
+                  <span>ACESSAR PLAYLISTS</span>
+                  <ArrowUpRight className="h-4 w-4" />
                 </div>
               </a>
 
               {/* E-mail Card */}
-              <div 
-                className="p-6 rounded-2xl glassmorphism border border-white/10 flex items-center gap-4 lg:col-span-1"
+              <a 
+                href={`mailto:${content.contact.email}`}
+                className="p-8 rounded-3xl glassmorphism border border-white/10 hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
               >
-                <div className="bg-white/5 border border-white/10 h-11 w-11 rounded-xl flex items-center justify-center text-gray-400 shrink-0">
-                  <Mail className="h-5 w-5" />
+                <div className="space-y-4">
+                  <div className="bg-emerald-500/10 h-12 w-12 rounded-2xl flex items-center justify-center text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-black transition-all duration-300 shrink-0">
+                    <Mail className="h-6 w-6" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">E-mail Institucional</h4>
+                    <p className="text-base font-mono text-white mt-1 group-hover:text-emerald-400 transition-colors break-all leading-tight">
+                      {content.contact.email}
+                    </p>
+                    <p className="text-xs text-gray-400 font-sans mt-2 leading-relaxed">
+                      Canal oficial direcionado a outras entidades acadêmicas, editores, órgãos governamentais ou dúvidas sobre admissões.
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">E-mail de Ofício</h4>
-                  <p className="text-xs font-mono text-gray-300 break-words max-w-[200px]">{content.contact.email}</p>
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-emerald-400 hover:text-emerald-300">
+                  <span>ENVIAR E-MAIL DE OFÍCIO</span>
+                  <ArrowUpRight className="h-4 w-4" />
                 </div>
-              </div>
-
-              {/* Physical Address Sede Card */}
-              <div 
-                className="p-6 rounded-2xl glassmorphism border border-white/10 flex items-center gap-4 sm:col-span-2 lg:col-span-2 text-left"
-              >
-                <div className="bg-white/5 border border-white/10 h-11 w-11 rounded-xl flex items-center justify-center text-gray-400 shrink-0">
-                  <MapPin className="h-5 w-5" />
-                </div>
-                <div>
-                  <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Endereço da Secretaria</h4>
-                  <p className="text-xs text-gray-300 font-sans leading-relaxed">{content.contact.address}</p>
-                </div>
-              </div>
+              </a>
 
             </div>
 
           </div>
         </section>
+
+        {/* ================= BOTTOM POLICE TAPE BANNER ================= */}
+        <PoliceTape rotated={false} />
 
       </main>
 

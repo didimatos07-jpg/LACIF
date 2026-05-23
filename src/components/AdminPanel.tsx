@@ -1305,8 +1305,8 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
                 <h4 className="text-sm font-mono text-gray-400 uppercase">Contato & Redes Sociais</h4>
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <label className="block text-xs font-mono text-gray-500 mb-1">Link WhatsApp Oficial</label>
-                    <input type="text" value={contactWa} onChange={(e) => setContactWa(e.target.value)} className="w-full p-2.5 bg-zinc-900 border border-white/5 rounded text-xs" />
+                    <label className="block text-xs font-mono text-gray-500 mb-1">YouTube Link</label>
+                    <input type="text" value={contactYt} onChange={(e) => setContactYt(e.target.value)} className="w-full p-2.5 bg-zinc-900 border border-white/5 rounded text-xs" />
                   </div>
                   <div>
                     <label className="block text-xs font-mono text-gray-500 mb-1">E-mail Técnico LACIF</label>
@@ -1323,11 +1323,6 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
                     <label className="block text-xs font-mono text-gray-500 mb-1">TikTok Link</label>
                     <input type="text" value={contactTiktok} onChange={(e) => setContactTiktok(e.target.value)} className="w-full p-2.5 bg-zinc-900 border border-white/5 rounded text-xs" />
                   </div>
-                </div>
-
-                <div>
-                  <label className="block text-xs font-mono text-gray-500 mb-1">Endereço de Secretaria Física</label>
-                  <input type="text" value={contactAddr} onChange={(e) => setContactAddr(e.target.value)} className="w-full p-2.5 bg-zinc-900 border border-white/5 rounded text-xs" />
                 </div>
               </div>
 
