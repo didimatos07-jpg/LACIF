@@ -1,0 +1,31 @@
+{
+  "entities": {
+    "siteConfig": {
+      "title": "Site Configuration",
+      "description": "Dynamic and persistent content representing all editable sections of LACIF UFF, including directories, registries, links, specialties, and FAQs.",
+      "type": "object",
+      "properties": {
+        "contentJson": {
+          "type": "string",
+          "description": "Serialized SiteContent JSON containing all configured sections"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp of the last update"
+        },
+        "updatedBy": {
+          "type": "string",
+          "description": "Identifier of the admin who updated the records"
+        }
+      },
+      "required": ["contentJson", "updatedAt"]
+    }
+  },
+  "firestore": {
+    "/config/{configId}": {
+      "schema": "siteConfig",
+      "description": "Root configuration document containing the live state of LACIF UFF shared with all public visitors and administrators."
+    }
+  }
+}

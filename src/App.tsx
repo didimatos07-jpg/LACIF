@@ -41,7 +41,10 @@ import Gallery from './components/Gallery.tsx';
 import AdminPanel from './components/AdminPanel.tsx';
 import PoliceTape from './components/PoliceTape.tsx';
 import AmbientPoliceLights from './components/AmbientPoliceLights.tsx';
-import LacifEmblem from './components/LacifEmblem.tsx';
+
+// Real-time dynamic Firestore persistence integration
+import { db, isFirebaseEnabled, handleFirestoreError, OperationType } from './lib/firebase.ts';
+import { doc, onSnapshot, setDoc } from 'firebase/firestore';
 
 export default function App() {
   const [content, setContent] = useState<SiteContent>(INITIAL_CONTENT);
@@ -52,14 +55,56 @@ export default function App() {
   const [activeMapStage, setActiveMapStage] = useState<'preservacao' | 'fixacao' | 'coleta' | 'analise'>('preservacao');
   const [activeActivityTab, setActiveActivityTab] = useState<'all' | 'simulado' | 'workshop' | 'seminario'>('all');
 
-  // Load and cache State seamlessly
+  // Load and cache State seamlessly via Firebase real-time onSnapshot or local fallback
   useEffect(() => {
-    const cached = localStorage.getItem('lacif_site_content_2026');
-    if (cached) {
-      try {
-        setContent(JSON.parse(cached));
-      } catch (err) {
-        console.error("Erro de leitura do banco de custódia local, restaurando padrões.", err);
+    let unsubscribe: () => void = () => {};
+
+    if (isFirebaseEnabled && db) {
+      const configDocRef = doc(db, 'config', 'lacif');
+      
+      unsubscribe = onSnapshot(configDocRef, (docSnap) => {
+        if (docSnap.exists()) {
+          const data = docSnap.data();
+          if (data && data.contentJson) {
+            try {
+              const parsed = JSON.parse(data.contentJson);
+              setContent(parsed);
+              console.log("Central site content synchronized successfully from Cloud Firestore!");
+            } catch (err) {
+              console.error("Failed to parse centralized cloud config JSON:", err);
+            }
+          }
+        } else {
+          // Document does not exist in Cloud yet. Fallback to local storage or defaults. Do not seed as non-auth visitor.
+          console.log("Central cloud document 'config/lacif' does not exist yet. Using local cache.");
+          const cached = localStorage.getItem('lacif_site_content_2026');
+          if (cached) {
+            try {
+              setContent(JSON.parse(cached));
+            } catch (err) {
+              console.error("Failed to parse local cached content on missing cloud doc:", err);
+            }
+          }
+        }
+      }, (error) => {
+        console.warn("[LACIF FIREBASE PUBLIC READ FALLBACK]: Config load error (likely permissions/rules syncing or offline). Using local storage fallback.", error);
+        const cached = localStorage.getItem('lacif_site_content_2026');
+        if (cached) {
+          try {
+            setContent(JSON.parse(cached));
+          } catch (err) {
+            console.error("Failed to parse cached local storage content:", err);
+          }
+        }
+      });
+    } else {
+      const cached = localStorage.getItem('lacif_site_content_2026');
+      if (cached) {
+        try {
+          setContent(JSON.parse(cached));
+        } catch (err) {
+          console.error("Erro de leitura do banco de custódia local, restaurando padrões.", err);
+        }
       }
     }
 
@@ -101,16 +146,48 @@ export default function App() {
     } catch (e) {
       console.error("Erro ao rastrear visualização de página:", e);
     }
+
+    return () => {
+      unsubscribe();
+    };
   }, []);
 
-  const handleUpdateContent = (updated: SiteContent) => {
+  const handleUpdateContent = async (updated: SiteContent) => {
     setContent(updated);
     localStorage.setItem('lacif_site_content_2026', JSON.stringify(updated));
+
+    if (isFirebaseEnabled && db) {
+      try {
+        const configDocRef = doc(db, 'config', 'lacif');
+        await setDoc(configDocRef, {
+          contentJson: JSON.stringify(updated),
+          updatedAt: new Date().toISOString(),
+          updatedBy: "Admin"
+        });
+        console.log("Registry changes successfully saved and broadcast via Cloud Firestore!");
+      } catch (err) {
+        handleFirestoreError(err, OperationType.WRITE, 'config/lacif');
+      }
+    }
   };
 
-  const handleResetToDefaults = () => {
+  const handleResetToDefaults = async () => {
     setContent(INITIAL_CONTENT);
     localStorage.removeItem('lacif_site_content_2026');
+
+    if (isFirebaseEnabled && db) {
+      try {
+        const configDocRef = doc(db, 'config', 'lacif');
+        await setDoc(configDocRef, {
+          contentJson: JSON.stringify(INITIAL_CONTENT),
+          updatedAt: new Date().toISOString(),
+          updatedBy: "Admin-Reset"
+        });
+        console.log("Central cloud database reset to baseline defaults.");
+      } catch (err) {
+        handleFirestoreError(err, OperationType.WRITE, 'config/lacif');
+      }
+    }
   };
 
   // Smooth scroll and active tracker updates
@@ -392,8 +469,8 @@ export default function App() {
 
               {/* Pillar 2: Pesquisa */}
               <div className="p-8 rounded-2xl glassmorphism border border-blue-500/15 hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(0,123,255,0.05)] transition-all duration-300 text-center space-y-3">
-                <div className="h-20 w-20 flex items-center justify-center mx-auto mb-4 text-yellow-400">
-                  <LacifEmblem className="h-18 w-18" />
+                <div className="h-12 w-12 rounded-xl bg-blue-950 border border-blue-500/30 flex items-center justify-center mx-auto mb-4 text-yellow-400">
+                  <Fingerprint className="h-6 w-6 animate-pulse" />
                 </div>
                 <h4 className="font-display font-bold text-white text-lg uppercase tracking-wider">Pesquisa</h4>
                 <p className="text-xs text-gray-400 leading-relaxed font-mono">
@@ -937,8 +1014,8 @@ export default function App() {
       <footer className="bg-[#050505]/80 backdrop-blur-md border-t border-white/10 py-10 px-4 text-center text-gray-500 text-xs font-mono select-none">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 font-sans text-xs">
           
-          <div className="flex items-center gap-3 text-white">
-            <LacifEmblem className="h-14 w-14" />
+          <div className="flex items-center gap-2 text-white">
+            <Fingerprint className="h-5 w-5 text-blue-500" />
             <span className="font-display font-bold text-sm tracking-wider">
               LACIF <span className="text-yellow-400 font-mono">UFF</span>
             </span>

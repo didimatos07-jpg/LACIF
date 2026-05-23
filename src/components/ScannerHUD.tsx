@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Shield, Activity, Radio, Cpu, CheckCircle } from 'lucide-react';
-import LacifEmblem from './LacifEmblem.tsx';
+import { Shield, Fingerprint, Activity, Radio, Cpu, CheckCircle } from 'lucide-react';
 
 export default function ScannerHUD() {
   const [scanStatus, setScanStatus] = useState<'idle' | 'scanning' | 'analyzed'>('idle');
@@ -78,7 +77,7 @@ export default function ScannerHUD() {
             </div>
           ) : (
             <div className="text-center flex flex-col items-center">
-              <LacifEmblem className="h-20 w-20 group-hover:scale-110 transition-transform duration-300" />
+              <Fingerprint className="h-12 w-12 text-blue-400 group-hover:scale-110 transition-transform duration-300" />
               <span className="font-mono text-[10px] text-blue-300 mt-2 block">Toque para Escanear</span>
             </div>
           )}

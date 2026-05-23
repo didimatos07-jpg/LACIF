@@ -26,7 +26,7 @@ import {
   BarChart3
 } from 'lucide-react';
 import { SiteContent, Director, ForensicSpecialty, QuizQuestion, LibraryItem, FAQItem, GalleryItem } from '../types.ts';
-import LacifEmblem from './LacifEmblem.tsx';
+import { isFirebaseEnabled } from '../lib/firebase.ts';
 
 interface AdminPanelProps {
   content: SiteContent;
@@ -567,8 +567,18 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
             <h2 className="font-display font-semibold text-sm md:text-base leading-none">
               Console Autônomo da Diretoria <span className="text-yellow-400 font-mono uppercase font-bold text-[9px] bg-yellow-400/15 px-1.5 py-0.5 rounded ml-1 border border-yellow-400/25">ATIVO</span>
             </h2>
-            <span className="text-[9px] font-mono text-blue-400 uppercase tracking-widest mt-1 block">
-              Gerencie Conteúdos, Integrantes, Mural de Memórias, Biblioteca e Links
+            <span className="text-[9px] font-mono text-blue-400 uppercase tracking-widest mt-1 flex items-center gap-1.5 flex-wrap">
+              <span>Gerencie Conteúdos, Integrantes, Mural de Memórias, Biblioteca e Links</span>
+              <span className="text-gray-600">|</span>
+              {isFirebaseEnabled ? (
+                <span className="inline-flex items-center gap-1 text-[9px] text-emerald-400 bg-emerald-500/10 border border-emerald-500/20 px-1.5 py-0.5 rounded uppercase font-bold tracking-normal">
+                  ● Nuvem Ativa (Firebase Sync)
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 text-[10px] text-yellow-500 bg-yellow-400/10 border border-yellow-400/20 px-1.5 py-0.5 rounded uppercase font-bold tracking-normal" title="Configure as chaves do Firebase no Vercel para sincronizar em outros computadores">
+                  ● Local (Navegador)
+                </span>
+              )}
             </span>
           </div>
         </div>
@@ -765,129 +775,97 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
 
               </div>
 
-              {/* Section Accesses Ranking graph with Emblem */}
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                
-                {/* Section Accesses Ranking graph */}
-                <div className="lg:col-span-2 p-6 rounded-2xl bg-zinc-950 border border-white/5 space-y-6">
-                  <div>
-                    <h4 className="font-display font-bold text-sm text-yellow-400 uppercase tracking-wider flex items-center gap-2">
-                      <BarChart3 className="h-4.5 w-4.5 text-yellow-400" /> Ranking de Cliques de Acesso Recebidos por Seção
-                    </h4>
-                    <p className="text-[11px] font-mono text-gray-500 mt-1">
-                      Visualização em tempo real das preferências de navegação e acessos registrados por área.
-                    </p>
-                  </div>
-
-                  <div className="space-y-4">
-                    {(() => {
-                      const sectionLabels: Record<string, string> = {
-                        inicio: "Início / Apresentação Hero",
-                        sobre: "Sobre a Liga (Apresentação)",
-                        historia: "Histórico & Origem (Linha do Tempo)",
-                        pilares: "Nossos Três Pilares (Ensino, Pesquisa, Extensão)",
-                        diretoria: "Diretoria de Custódia & Docentes",
-                        especialidades: "Especialidades Forenses e Perícias",
-                        vocacional: "Ferramenta: Teste Vocacional Forense",
-                        quiz: "Ferramenta: Quiz Investigativo de Local de Crime",
-                        biblioteca: "Biblioteca Criminológica / Google Drive",
-                        galeria: "Galerias da LACIF UFF / Fotos",
-                        faq: "FAQ & Dúvidas de Ingresso",
-                        seletivo: "Processo Seletivo (Inscrições Google Forms)",
-                        contato: "Canais de Contato com Peritos"
-                      };
-
-                      const rawStats = Object.keys(sectionLabels).map((key) => ({
-                        id: key,
-                        label: sectionLabels[key],
-                        count: Number(metricsSections[key] || 0)
-                      }))
-                      .sort((a, b) => b.count - a.count);
-
-                      const maxClicks = Math.max(...rawStats.map(s => s.count), 1);
-                      const totalClicks = rawStats.reduce((acc, s) => acc + s.count, 0) || 1;
-
-                      if (rawStats.length === 0) {
-                        return (
-                          <div className="py-8 text-center text-xs font-mono text-gray-500">
-                            Nenhum clique de seção registrado ainda. Navegue pelo portal para compor os dados.
-                          </div>
-                        );
-                      }
-
-                      return rawStats.map((item, index) => {
-                        const percentage = Math.round((item.count / maxClicks) * 100);
-                        const relativeShare = Math.round((item.count / totalClicks) * 100);
-                        
-                        // Highlight top-3 differently
-                        const isTop1 = index === 0;
-                        const isTop2 = index === 1;
-                        const isTop3 = index === 2;
-
-                        return (
-                          <div key={item.id} className="space-y-1.5">
-                            <div className="flex justify-between items-end text-xs font-mono">
-                              <span className="flex items-center gap-1.5 text-gray-300">
-                                <span className={`h-4 w-4 rounded-sm flex items-center justify-center text-[9px] font-bold ${
-                                  isTop1 ? 'bg-yellow-400 text-black' :
-                                  isTop2 ? 'bg-blue-500 text-white' :
-                                  isTop3 ? 'bg-emerald-500 text-white' :
-                                  'bg-zinc-800 text-gray-500'
-                                }`}>
-                                  {index + 1}
-                                </span>
-                                {item.label}
-                              </span>
-                              <span className="text-gray-400">
-                                <strong className="text-white font-sans">{item.count}</strong> acessos ({relativeShare}%)
-                              </span>
-                            </div>
-
-                            <div className="h-2 rounded-full bg-zinc-900 border border-white/5 overflow-hidden relative">
-                              <div 
-                                className={`h-full transition-all duration-1000 ${
-                                  isTop1 ? 'bg-gradient-to-r from-yellow-500 to-yellow-300 font-extrabold' :
-                                  isTop2 ? 'bg-gradient-to-r from-blue-600 to-blue-400 font-extrabold' :
-                                  isTop3 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400' :
-                                  'bg-[#081421] border-r border-[#FFD000]/20'
-                                }`}
-                                style={{ width: `${percentage}%` }}
-                              />
-                            </div>
-                          </div>
-                        );
-                      });
-                    })()}
-                  </div>
+              {/* Section Accesses Ranking graph */}
+              <div className="p-6 rounded-2xl bg-zinc-950 border border-white/5 space-y-6">
+                <div>
+                  <h4 className="font-display font-bold text-sm text-yellow-400 uppercase tracking-wider flex items-center gap-2">
+                    <BarChart3 className="h-4.5 w-4.5 text-yellow-400" /> Ranking de Cliques de Acesso Recebidos por Seção
+                  </h4>
+                  <p className="text-[11px] font-mono text-gray-500 mt-1">
+                    Visualização em tempo real das preferências de navegação e acessos registrados por área.
+                  </p>
                 </div>
 
-                {/* Right sidebar: EMBLEMA EXCLUSIVO DO ADMINISTRADOR */}
-                <div className="p-6 rounded-2xl bg-zinc-950 border border-white/5 flex flex-col items-center justify-between space-y-6">
-                  <div className="text-center w-full">
-                    <span className="text-[9px] font-mono font-bold bg-[#FFD000]/10 text-yellow-400 border border-[#FFD000]/20 px-2.5 py-1 rounded uppercase tracking-wider block w-fit mx-auto">
-                      ELEMENTO DE CONTROLE
-                    </span>
-                    <h4 className="font-display font-bold text-sm text-white mt-3">
-                      Emblema Oficial LACIF UFF
-                    </h4>
-                    <p className="text-[10px] font-mono text-gray-500 mt-1">
-                      Marca e chancelas curriculares de custódia integradas para uso administrativo privativo.
-                    </p>
-                  </div>
+                <div className="space-y-4">
+                  {(() => {
+                    const sectionLabels: Record<string, string> = {
+                      inicio: "Início / Apresentação Hero",
+                      sobre: "Sobre a Liga (Apresentação)",
+                      historia: "Histórico & Origem (Linha do Tempo)",
+                      pilares: "Nossos Três Pilares (Ensino, Pesquisa, Extensão)",
+                      diretoria: "Diretoria de Custódia & Docentes",
+                      especialidades: "Especialidades Forenses e Perícias",
+                      vocacional: "Ferramenta: Teste Vocacional Forense",
+                      quiz: "Ferramenta: Quiz Investigativo de Local de Crime",
+                      biblioteca: "Biblioteca Criminológica / Google Drive",
+                      galeria: "Galerias da LACIF UFF / Fotos",
+                      faq: "FAQ & Dúvidas de Ingresso",
+                      seletivo: "Processo Seletivo (Inscrições Google Forms)",
+                      contato: "Canais de Contato com Peritos"
+                    };
 
-                  {/* Stunning, high fidelity rendering of the imported LacifEmblem component */}
-                  <div className="relative flex items-center justify-center p-2 bg-transparent w-full max-w-[210px] aspect-square">
-                    <LacifEmblem className="h-44 w-44" glow={true} />
-                  </div>
+                    const rawStats = Object.keys(sectionLabels).map((key) => ({
+                      id: key,
+                      label: sectionLabels[key],
+                      count: Number(metricsSections[key] || 0)
+                    }))
+                    .sort((a, b) => b.count - a.count);
 
-                  <div className="w-full text-center border-t border-white/5 pt-3.5 space-y-1">
-                    <span className="text-[9px] font-mono text-gray-500 uppercase block">Ativos Identitários da LACIF</span>
-                    <span className="inline-flex items-center gap-1 text-[10px] font-mono text-emerald-400 font-bold uppercase">
-                      ✓ Emblema Carregado
-                    </span>
-                  </div>
+                    const maxClicks = Math.max(...rawStats.map(s => s.count), 1);
+                    const totalClicks = rawStats.reduce((acc, s) => acc + s.count, 0) || 1;
+
+                    if (rawStats.length === 0) {
+                      return (
+                        <div className="py-8 text-center text-xs font-mono text-gray-500">
+                          Nenhum clique de seção registrado ainda. Navegue pelo portal para compor os dados.
+                        </div>
+                      );
+                    }
+
+                    return rawStats.map((item, index) => {
+                      const percentage = Math.round((item.count / maxClicks) * 100);
+                      const relativeShare = Math.round((item.count / totalClicks) * 100);
+                      
+                      // Highlight top-3 differently
+                      const isTop1 = index === 0;
+                      const isTop2 = index === 1;
+                      const isTop3 = index === 2;
+
+                      return (
+                        <div key={item.id} className="space-y-1.5">
+                          <div className="flex justify-between items-end text-xs font-mono">
+                            <span className="flex items-center gap-1.5 text-gray-300">
+                              <span className={`h-4 w-4 rounded-sm flex items-center justify-center text-[9px] font-bold ${
+                                isTop1 ? 'bg-yellow-400 text-black' :
+                                isTop2 ? 'bg-blue-500 text-white' :
+                                isTop3 ? 'bg-emerald-500 text-white' :
+                                'bg-zinc-800 text-gray-500'
+                              }`}>
+                                {index + 1}
+                              </span>
+                              {item.label}
+                            </span>
+                            <span className="text-gray-400">
+                              <strong className="text-white font-sans">{item.count}</strong> acessos ({relativeShare}%)
+                            </span>
+                          </div>
+
+                          <div className="h-2 rounded-full bg-zinc-900 border border-white/5 overflow-hidden relative">
+                            <div 
+                              className={`h-full transition-all duration-1000 ${
+                                isTop1 ? 'bg-gradient-to-r from-yellow-500 to-yellow-300 font-extrabold' :
+                                isTop2 ? 'bg-gradient-to-r from-blue-600 to-blue-400 font-extrabold' :
+                                isTop3 ? 'bg-gradient-to-r from-emerald-600 to-emerald-400' :
+                                'bg-[#081421] border-r border-[#FFD000]/20'
+                              }`}
+                              style={{ width: `${percentage}%` }}
+                            />
+                          </div>
+                        </div>
+                      );
+                    });
+                  })()}
                 </div>
-
               </div>
 
               {/* Digital forensic simulation terminal logs */}
