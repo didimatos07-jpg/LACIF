@@ -153,7 +153,7 @@ export default function VocationalTest({ questions, results }: VocationalTestPro
             <div className="md:col-span-5 space-y-4">
               <div className="relative group rounded-xl overflow-hidden border border-white/10 shadow-lg">
                 <img 
-                  src={finalResult?.image} 
+                  src={finalResult?.image || null} 
                   alt={finalResult?.title}
                   className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"

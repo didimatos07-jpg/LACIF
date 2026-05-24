@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { SiteContent, Director, ForensicSpecialty, QuizQuestion, LibraryItem, FAQItem, GalleryItem } from '../types.ts';
 import { isFirebaseEnabled } from '../lib/firebase.ts';
+import { SafeStorage } from '../utils/storage.ts';
 
 interface AdminPanelProps {
   content: SiteContent;
@@ -132,13 +133,52 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
   const [metricsUnique, setMetricsUnique] = useState(0);
   const [metricsSections, setMetricsSections] = useState<Record<string, number>>({});
   const [metricsLogs, setMetricsLogs] = useState<{ id: string; time: string; ip: string; page: string }[]>([]);
+  const [copiedSection, setCopiedSection] = useState<string | null>(null);
+
+  const handleCopyLink = (sectionId: string) => {
+    const origin = window.location.origin || 'https://lacif-uff.vercel.app';
+    const link = `${origin}/#${sectionId}`;
+
+    const executeFallback = () => {
+      try {
+        const textArea = document.createElement('textarea');
+        textArea.value = link;
+        textArea.style.top = '0';
+        textArea.style.left = '0';
+        textArea.style.position = 'fixed';
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        setCopiedSection(sectionId);
+        setTimeout(() => setCopiedSection(null), 2000);
+      } catch (err) {
+        console.error('Safe fallback copy failed', err);
+      }
+    };
+
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(link)
+        .then(() => {
+          setCopiedSection(sectionId);
+          setTimeout(() => setCopiedSection(null), 2000);
+        })
+        .catch((err) => {
+          console.warn('Failed to copy using writeText, running fallback', err);
+          executeFallback();
+        });
+    } else {
+      executeFallback();
+    }
+  };
 
   useEffect(() => {
-    const views = parseInt(localStorage.getItem('lacif_total_views') || '312', 10);
-    const unique = parseInt(localStorage.getItem('lacif_unique_visitors') || '124', 10);
+    const views = parseInt(SafeStorage.getItem('lacif_total_views') || '312', 10);
+    const unique = parseInt(SafeStorage.getItem('lacif_unique_visitors') || '124', 10);
     let sections: Record<string, number> = {};
     try {
-      sections = JSON.parse(localStorage.getItem('lacif_section_access_stats') || '{}');
+      sections = JSON.parse(SafeStorage.getItem('lacif_section_access_stats') || '{}');
     } catch {
       sections = {};
     }
@@ -159,9 +199,9 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
         'seletivo': 118,
         'contato': 26
       };
-      localStorage.setItem('lacif_total_views', '312');
-      localStorage.setItem('lacif_unique_visitors', '124');
-      localStorage.setItem('lacif_section_access_stats', JSON.stringify(sections));
+      SafeStorage.setItem('lacif_total_views', '312');
+      SafeStorage.setItem('lacif_unique_visitors', '124');
+      SafeStorage.setItem('lacif_section_access_stats', JSON.stringify(sections));
     }
 
     setMetricsViews(views);
@@ -186,9 +226,9 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
 
   const handleClearMetrics = () => {
     if (window.confirm('Atenção: Deseja realmente zerar todos os dados do monitoramento de visitas e seções do site?')) {
-      localStorage.setItem('lacif_total_views', '0');
-      localStorage.setItem('lacif_unique_visitors', '0');
-      localStorage.setItem('lacif_section_access_stats', JSON.stringify({}));
+      SafeStorage.setItem('lacif_total_views', '0');
+      SafeStorage.setItem('lacif_unique_visitors', '0');
+      SafeStorage.setItem('lacif_section_access_stats', JSON.stringify({}));
       setMetricsViews(0);
       setMetricsUnique(0);
       setMetricsSections({});
@@ -885,6 +925,55 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
                   ))}
                 </div>
               </div>
+
+              {/* DYNAMIC SHARING LINKS AND HOST RECOGNITION */}
+              <div className="p-6 rounded-2xl bg-zinc-950 border border-yellow-400/20 space-y-4">
+                <div className="flex flex-col sm:flex-row justify-between sm:items-center gap-2 border-b border-white/5 pb-3">
+                  <div>
+                    <span className="text-xs font-mono text-yellow-400 uppercase tracking-widest block font-bold">Links de Acesso ao Portal (Domínio Ativo)</span>
+                    <p className="text-[10px] text-gray-500 font-mono mt-0.5">Disponibilize enlaces diretos aos seus visitantes para as respectivas áreas</p>
+                  </div>
+                  <span className="inline-flex items-center gap-1.5 px-2 py-1 bg-blue-500/10 border border-blue-500/20 rounded font-mono text-[9px] text-blue-400 uppercase">
+                    URL Detectada: {window.location.origin || 'https://lacif-uff.vercel.app'}
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {[
+                    { label: 'Início / Apresentação', id: 'inicio' },
+                    { label: 'Sobre a Liga & História', id: 'sobre' },
+                    { label: 'Diretoria de Custódia', id: 'diretoria' },
+                    { label: 'Especialidades & Perícias', id: 'especialidades' },
+                    { label: 'Teste Vocacional Forense', id: 'vocacional' },
+                    { label: 'Biblioteca Criminológica', id: 'biblioteca' },
+                    { label: 'Quiz de Cenas de Crime', id: 'quiz' },
+                    { label: 'Mural de Fotos & Registros', id: 'galeria' },
+                    { label: 'Inscrições (Seletivo)', id: 'seletivo' },
+                    { label: 'Canais de Contato', id: 'contato' }
+                  ].map((sec) => {
+                    const fullLink = `${window.location.origin || 'https://lacif-uff.vercel.app'}/#${sec.id}`;
+                    return (
+                      <div key={sec.id} className="p-2.5 rounded-xl bg-black/50 border border-white/5 flex items-center justify-between gap-3 text-xs">
+                        <div className="space-y-0.5 overflow-hidden">
+                          <span className="text-[10px] font-mono text-gray-400 block font-semibold">{sec.label}</span>
+                          <span className="text-[9px] font-mono text-gray-500 truncate block text-yellow-500/80">{fullLink}</span>
+                        </div>
+                        <button
+                          onClick={() => handleCopyLink(sec.id)}
+                          type="button"
+                          className={`px-2.5 py-1 rounded text-[9px] font-mono font-bold uppercase shrink-0 transition-all cursor-pointer ${
+                            copiedSection === sec.id 
+                              ? 'bg-emerald-500 text-black' 
+                              : 'bg-zinc-800 text-gray-300 hover:bg-yellow-400 hover:text-black hover:shadow-[0_0_10px_rgba(255,208,0,0.2)]'
+                          }`}
+                        >
+                          {copiedSection === sec.id ? 'Copiado!' : 'Copiar'}
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
             </div>
           )}
 
@@ -979,7 +1068,7 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
                         />
                       </label>
                     </div>
-                    <img src={formHistoryImage} alt="Preview Capa Histórica" className="w-full h-32 object-cover rounded-lg border border-white/10" referrerPolicy="no-referrer" />
+                    <img src={formHistoryImage || null} alt="Preview Capa Histórica" className="w-full h-32 object-cover rounded-lg border border-white/10" referrerPolicy="no-referrer" />
                   </div>
                 </div>
               </div>
@@ -1039,7 +1128,7 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
                     className="p-4 rounded-xl border border-white/5 bg-zinc-900/40 flex items-start gap-4 hover:border-blue-500/20 transition-all"
                   >
                     <img 
-                      src={m.image} 
+                      src={m.image || null} 
                       alt={m.name} 
                       className="w-16 h-16 object-cover rounded-full border border-white/15 shrink-0" 
                       referrerPolicy="no-referrer"
@@ -1399,7 +1488,7 @@ export default function AdminPanel({ content, onUpdateContent, onClose, onResetT
                           {isPdf ? (
                             <FileText className="h-10 w-10 text-red-500" />
                           ) : (
-                            <img src={item.image} alt={item.title} className="w-full h-full object-cover rounded" referrerPolicy="no-referrer" />
+                            <img src={item.image || null} alt={item.title} className="w-full h-full object-cover rounded" referrerPolicy="no-referrer" />
                           )}
                           <button 
                             type="button" 

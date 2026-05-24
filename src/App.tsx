@@ -30,6 +30,7 @@ import {
 
 import { SiteContent, Director, ForensicSpecialty, LibraryItem, GalleryItem } from './types.ts';
 import { INITIAL_CONTENT } from './mockData.ts';
+import { SafeStorage, SafeSessionStorage } from './utils/storage.ts';
 
 // Core Subcomponents
 import Header from './components/Header.tsx';
@@ -77,7 +78,7 @@ export default function App() {
         } else {
           // Document does not exist in Cloud yet. Fallback to local storage or defaults. Do not seed as non-auth visitor.
           console.log("Central cloud document 'config/lacif' does not exist yet. Using local cache.");
-          const cached = localStorage.getItem('lacif_site_content_2026');
+          const cached = SafeStorage.getItem('lacif_site_content_2026');
           if (cached) {
             try {
               setContent(JSON.parse(cached));
@@ -88,7 +89,7 @@ export default function App() {
         }
       }, (error) => {
         console.warn("[LACIF FIREBASE PUBLIC READ FALLBACK]: Config load error (likely permissions/rules syncing or offline). Using local storage fallback.", error);
-        const cached = localStorage.getItem('lacif_site_content_2026');
+        const cached = SafeStorage.getItem('lacif_site_content_2026');
         if (cached) {
           try {
             setContent(JSON.parse(cached));
@@ -98,7 +99,7 @@ export default function App() {
         }
       });
     } else {
-      const cached = localStorage.getItem('lacif_site_content_2026');
+      const cached = SafeStorage.getItem('lacif_site_content_2026');
       if (cached) {
         try {
           setContent(JSON.parse(cached));
@@ -110,21 +111,21 @@ export default function App() {
 
     // Access Monitor: Track page loads and visitors
     try {
-      const viewsVal = localStorage.getItem('lacif_total_views');
+      const viewsVal = SafeStorage.getItem('lacif_total_views');
       let views = viewsVal ? parseInt(viewsVal, 10) : 312; // Prefilled with realistic premium defaults if first run
-      localStorage.setItem('lacif_total_views', (views + 1).toString());
+      SafeStorage.setItem('lacif_total_views', (views + 1).toString());
 
-      const uniqueVal = localStorage.getItem('lacif_unique_visitors');
+      const uniqueVal = SafeStorage.getItem('lacif_unique_visitors');
       let unique = uniqueVal ? parseInt(uniqueVal, 10) : 124;
 
-      if (!sessionStorage.getItem('lacif_visitor_counted')) {
+      if (!SafeSessionStorage.getItem('lacif_visitor_counted')) {
         unique += 1;
-        localStorage.setItem('lacif_unique_visitors', unique.toString());
-        sessionStorage.setItem('lacif_visitor_counted', 'true');
+        SafeStorage.setItem('lacif_unique_visitors', unique.toString());
+        SafeSessionStorage.setItem('lacif_visitor_counted', 'true');
       }
 
       // Track section stats initiation
-      const statsStr = localStorage.getItem('lacif_section_access_stats');
+      const statsStr = SafeStorage.getItem('lacif_section_access_stats');
       let stats = statsStr ? JSON.parse(statsStr) : {
         'inicio': 112,
         'sobre': 48,
@@ -142,7 +143,7 @@ export default function App() {
       };
       
       stats['inicio'] = (stats['inicio'] || 0) + 1;
-      localStorage.setItem('lacif_section_access_stats', JSON.stringify(stats));
+      SafeStorage.setItem('lacif_section_access_stats', JSON.stringify(stats));
     } catch (e) {
       console.error("Erro ao rastrear visualização de página:", e);
     }
@@ -154,7 +155,7 @@ export default function App() {
 
   const handleUpdateContent = async (updated: SiteContent) => {
     setContent(updated);
-    localStorage.setItem('lacif_site_content_2026', JSON.stringify(updated));
+    SafeStorage.setItem('lacif_site_content_2026', JSON.stringify(updated));
 
     if (isFirebaseEnabled && db) {
       try {
@@ -173,7 +174,7 @@ export default function App() {
 
   const handleResetToDefaults = async () => {
     setContent(INITIAL_CONTENT);
-    localStorage.removeItem('lacif_site_content_2026');
+    SafeStorage.removeItem('lacif_site_content_2026');
 
     if (isFirebaseEnabled && db) {
       try {
@@ -196,7 +197,7 @@ export default function App() {
     
     // Access Monitor: Track section click in real-time
     try {
-      const statsStr = localStorage.getItem('lacif_section_access_stats');
+      const statsStr = SafeStorage.getItem('lacif_section_access_stats');
       let stats = statsStr ? JSON.parse(statsStr) : {
         'inicio': 112,
         'sobre': 48,
@@ -213,7 +214,7 @@ export default function App() {
         'contato': 26
       };
       stats[sectionId] = (stats[sectionId] || 0) + 1;
-      localStorage.setItem('lacif_section_access_stats', JSON.stringify(stats));
+      SafeStorage.setItem('lacif_section_access_stats', JSON.stringify(stats));
     } catch (e) {
       console.error("Erro ao registrar acesso de seção:", e);
     }
@@ -396,7 +397,7 @@ export default function App() {
               <div className="absolute inset-0 bg-blue-600 rounded-2xl filter blur-xl opacity-10 group-hover:opacity-20 transition-opacity" />
               <div className="relative rounded-2xl overflow-hidden border border-white/10 z-10 shadow-2xl">
                 <img 
-                  src={content.historyImage} 
+                  src={content.historyImage || null} 
                   alt="Time LACIF UFF" 
                   className="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
@@ -520,7 +521,7 @@ export default function App() {
                 >
                   <div className="relative aspect-square overflow-hidden bg-white/5 border-b border-white/10">
                     <img 
-                      src={m.image} 
+                      src={m.image || null} 
                       alt={m.name} 
                       className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-105"
                       referrerPolicy="no-referrer"
@@ -601,7 +602,7 @@ export default function App() {
                   <div className="space-y-4">
                     <div className="relative aspect-video rounded-xl overflow-hidden bg-white/5 border border-white/10">
                       <img 
-                        src={s.image} 
+                        src={s.image || null} 
                         alt={s.title} 
                         className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500 transform group-hover:scale-105"
                         referrerPolicy="no-referrer"
@@ -664,7 +665,7 @@ export default function App() {
 
               <div className="relative aspect-video rounded-xl overflow-hidden mb-5 bg-white/5 border border-white/10">
                 <img 
-                  src={selectedSpecialty.image} 
+                  src={selectedSpecialty.image || null} 
                   alt={selectedSpecialty.title} 
                   className="w-full h-full object-cover"
                   referrerPolicy="no-referrer"
@@ -780,6 +781,7 @@ export default function App() {
 
             {/* Mount Library component */}
             <Library 
+              items={content.libraryItems}
               libraryDriveUrl={content.libraryDriveUrl}
             />
 

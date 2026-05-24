@@ -11,7 +11,7 @@ const firebaseConfig = {
   storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || appletConfig.storageBucket || "",
   messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || appletConfig.messagingSenderId || "",
   appId: import.meta.env.VITE_FIREBASE_APP_ID || appletConfig.appId || "",
-  firestoreDatabaseId: appletConfig.firestoreDatabaseId || undefined
+  firestoreDatabaseId: import.meta.env.VITE_FIREBASE_DATABASE_ID || appletConfig.firestoreDatabaseId || undefined
 };
 
 const hasConfig = !!(firebaseConfig.apiKey && firebaseConfig.projectId);
