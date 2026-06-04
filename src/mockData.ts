@@ -1,7 +1,7 @@
 import { SiteContent } from './types.ts';
 
 export const INITIAL_CONTENT: SiteContent = {
-  heroTitle: "LACIF UFF",
+  heroTitle: "LACiF UFF",
   heroSubtitle: "Ciência, investigação e conhecimento aplicados à justiça.",
   mission: "Promover ensino, pesquisa e extensão nas Ciências Forenses através da integração acadêmica, científica e tecnológica.",
   vision: "Ser referência universitária em Ciências Forenses, investigação científica e divulgação acadêmica.",
@@ -14,7 +14,7 @@ export const INITIAL_CONTENT: SiteContent = {
     "Trabalho em Equipe",
     "Valorização da Ciência"
   ],
-  historyText: "A Liga Acadêmica de Ciências Forenses da Universidade Federal Fluminense (LACIF UFF) nasceu da paixão e do anseio de estudantes e docentes em aprofundar os estudos em uma das áreas mais fascinantes e cruciais para a sociedade: a perícia criminal e a busca científica pela verdade. Fundada com o propósito de integrar diferentes saberes — da química à genética, do direito aos sistemas inteligentes de computação —, a liga rapidamente expandiu o seu escopo acadêmico.\n\nA LACIF UFF consolidou-se como um polo de excelência em ensino, pesquisa e extensão. Nossos membros participam de debates essenciais sobre a validade probatória, desenvolvem trabalhos acadêmicos de ponta, coordenam simulações de locais de crime de alto realismo e colaboram com peritos criminais oficiais da Polícia Civil, da Polícia Federal e de institutos de criminalística renomados. Aqui, moldamos as mentes investigativas e científicas do futuro.",
+  historyText: "A Liga Acadêmica de Ciências Forenses da Universidade Federal Fluminense (LACiF UFF) nasceu da paixão e do anseio de estudantes e docentes em aprofundar os estudos em uma das áreas mais fascinantes e cruciais para a sociedade: a perícia criminal e a busca científica pela verdade. Fundada com o propósito de integrar diferentes saberes — da química à genética, do direito aos sistemas inteligentes de computação —, a liga rapidamente expandiu o seu escopo acadêmico.\n\nA LACiF UFF consolidou-se como um polo de excelência em ensino, pesquisa e extensão. Nossos membros participam de debates essenciais sobre a validade probatória, desenvolvem trabalhos acadêmicos de ponta, coordenam simulações de locais de crime de alto realismo e colaboram com peritos criminais oficiais da Polícia Civil, da Polícia Federal e de institutos de criminalística renomados. Aqui, moldamos as mentes investigativas e científicas do futuro.",
   historyImage: "https://images.unsplash.com/photo-1576086213369-97a306d36557?q=80&w=800&auto=format&fit=crop",
   
   directors: [
@@ -23,7 +23,7 @@ export const INITIAL_CONTENT: SiteContent = {
       name: "Ana Bianca Espíndola",
       role: "Presidente",
       department: "Farmácia",
-      bio: "Entusiasta de Toxicologia e Análise Química de Substâncias de Interesse Forense. Coordena os projetos de extensão da LACIF.",
+      bio: "Entusiasta de Toxicologia e Análise Química de Substâncias de Interesse Forense. Coordena os projetos de extensão da LACiF.",
       instagram: "https://instagram.com/",
       lattes: "http://lattes.cnpq.br/",
       image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=400&auto=format&fit=crop"
@@ -62,242 +62,341 @@ export const INITIAL_CONTENT: SiteContent = {
 
   specialties: [
     {
+      id: "morte_violenta",
+      title: "Local de Crime contra a Pessoa (Morte Violenta)",
+      description: "Exames perinecroscópicos, preservação e isolamento de locais de homicídios, feminicídios, infanticídios e mortes violentas.",
+      detailedDescription: "A disciplina de Local de Crime contra a Pessoa estuda as manifestações físicas e vestígios ecológicos deixados em cenas de mortes violentas. O perito analisa manchas e padrões de respingos de sangue, posição corporal, marcas de arrastamento e traumatismos visíveis prévios à necropsia. O exame perinecroscópico inicial no local guia as linhas investigativas e garante a correta indexação da verdade temporal e espacial do homicídio.",
+      image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
+      glowColor: "cyan",
+      skills: ["Análise de Padrão de Manchas de Sangue", "Exame Perinecroscópico Fático", "Fotografia Criminal Forense"]
+    },
+    {
+      id: "patrimonio",
+      title: "Local de Crime contra o Patrimônio",
+      description: "Investigação pericial de furtos, roubos armados, arrombamentos de caixas eletrônicos, danos materiais estruturais e fraudes simuladas.",
+      detailedDescription: "Esta vertente concentra-se no levantamento técnico de locais que sofreram violações patrimoniais. O perito analisa os métodos de entrada e superação de obstáculos físicos (fechaduras estouradas, paredes perfuradas, uso de maçaricos e explosivos), buscando vestígios biológicos ou papilares dos autores, além de certificar se houve simulação de crime para recebimento indevido de seguros.",
+      image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=600&auto=format&fit=crop",
+      glowColor: "yellow",
+      skills: ["Análise de Superação de Obstáculos", "Revelação de Impressões Latentes", "Laudo de Avaliação de Danos Físicos"]
+    },
+    {
       id: "toxicologia",
       title: "Toxicologia Forense",
-      description: "Análise de agentes químicos, toxinas, venenos e álcool em amostras biológicas.",
-      detailedDescription: "A Toxicologia Forense utiliza os métodos analíticos da química e farmacologia para auxiliar investigações jurídicas envolvendo envenenamentos, abuso de drogas, dopagem esportiva ou acidentes de trânsito sob efeito de substâncias psicoativas.",
+      description: "Isolamento e análise molecular de agentes químicos, fármacos de prescrição, drogas ilícitas de abuso e venenos biológicos.",
+      detailedDescription: "A Toxicologia Forense aplica o rigor analítico da bioquímica e farmacologia para elucidar questões jurídicas urgentes. Envolve a triagem, confirmação e quantificação de venenos, substâncias psicotrópicas ilícitas, fármacos terapêuticos e álcool em matrizes como sangue, urina, fios de cabelo e tecidos post-mortem, guiando investigações de intoxicações acidentais, sobredoses premeditadas e homicídios silenciosos.",
       image: "https://images.unsplash.com/photo-1617155093730-a8bf47be792d?q=80&w=600&auto=format&fit=crop",
       glowColor: "cyan",
-      skills: ["Espectrometria de Massas", "Cromatografia Gasosa", "Análise de Tecidos e Sangue"]
+      skills: ["Espectrometria de Massas (LC-MS/MS)", "Cromatografia Gasosa Computada", "Triagem Toxicológica de Sobredoses"]
     },
     {
       id: "quimica",
       title: "Química Forense",
-      description: "Exame de matrizes químicas, explosivos, substâncias adulteradas e acelerantes de incêndio.",
-      detailedDescription: "Atua na caracterização de substâncias ilícitas apreendidas, na detecção de aditivos químicos em infrações tributárias, falsificação de obras de arte e análise detalhada de resíduos de fumo e disparos.",
+      description: "Análise de drogas de abuso puras apreendidas, explosivos comerciais, acelerantes de incêndio e adulterações em combustíveis.",
+      detailedDescription: "A Química Forense é o ramo responsável pela análise de materiais inorgânicos e sintéticos coletados em ocorrências criminais. Ela atua na descaracterização e identificação molecular de drogas sintéticas extremamente perigosas, mapeamento de acelerantes de incêndios e materiais combustíveis, além da comparação físico-química de vidros, plásticos, tintas automotivas, solos e resíduos pós-explosão em atentados.",
       image: "https://images.unsplash.com/photo-1607619056574-7b8d304f3c6f?q=80&w=600&auto=format&fit=crop",
       glowColor: "yellow",
-      skills: ["Teste de Reagentes de Plímeros", "Fluorescência de Raio-X", "Quimiluminescência"]
+      skills: ["Espectroscopia de Infravermelho (FTIR)", "Fluorescência de Raios-X (XRF)", "Cromatografia em Camada Delgada"]
     },
     {
-      id: "dna",
-      title: "DNA Forense",
-      description: "Identificação biológica inequívoca por meio de perfis genéticos de DNA.",
-      detailedDescription: "A Genética Forense revolucionou os sistemas jurídicos globais. Utilizando mínimos fragmentos de cabelo, saliva ou sangue, cria perfis genéticos únicos para identificar réus em infrações, estabelecer paternidades ou mapear corpos não identificados.",
+      id: "genetica",
+      title: "Genética Forense",
+      description: "Mapeamento e tipificação biológica inequívoca a partir de microvestígios celulares, estudos de paternidade e genealogia criminal.",
+      detailedDescription: "A Genética Forense revolucionou a criminologia. Através de quantidade vestigial de material biológico (como sangue, suor, epitélio bucal ou folículos capilares), o geneticista extrai, quantifica e amplifica sequências polimórficas de DNA (STRs e SNPs). Os perfis resultantes são cruzados contra bancos de dados biométricos nacionais de forma a determinar autoria penal indubitável ou estabelecer vínculos de parentesco.",
       image: "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop",
       glowColor: "cyan",
-      skills: ["Análise de PCR STR", "Mapeamento Mitocondrial", "Sequenciamento de Nova Geração"]
+      skills: ["Reação em Cadeia da Polimerase (PCR-STR)", "Sequenciamento de Nova Geração (NGS)", "Analyse Estatística de Probabilidade Genética"]
+    },
+    {
+      id: "engenharia",
+      title: "Engenharia Forense",
+      description: "Análise estrutural de desabamentos, dinâmica física de colisões de trânsito, falhas industriais e patologias construtivas.",
+      detailedDescription: "A Engenharia Forense aplica princípios físicos e mecânicos para investigar acidentes rodoviários, ferroviários e aéreos, além de desabamentos de pontes e edifícios. O engenheiro reconstrói vetorialmente colisões por meio do desgaste da pista, deformaçâo plástica das chapas metálicas, velocidade angular e atrito, gerando laudos precisos e simulações físicas que auxiliam nas decisões do judiciário.",
+      image: "https://images.unsplash.com/photo-1581093588401-fbb62a02f120?q=80&w=800&auto=format&fit=crop",
+      glowColor: "yellow",
+      skills: ["Cálculo Mecânico de Velocidade e Energia", "Modelagem Estrutural Tridimensional (CAD)", "Laudo de Estabilidade de Obras Civis"]
+    },
+    {
+      id: "informatica",
+      title: "Informática Forense",
+      description: "Preservação, extração e análise diagnóstica de vestígios em meios digitais, servidores de rede, nuvem e criptomoedas.",
+      detailedDescription: "Preservação cautelar, extração metodológica e análise diagnóstica de dados em meio digital. Utilizando bloqueadores de gravação e algoritmos seguros, os peritos em informática extraem metadados ocultos, chaves criptográficas quebradas, registros residuais de rede em servidores virtuais sob ataque e imagens de boot de sistemas afetados por vírus industriais ou invasões cibernéticas.",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop",
+      glowColor: "cyan",
+      skills: ["Aquisição de Bit-Stream Images Seladas", "Análise de Ransomwares e Malware", "Decodificação Hexadecimal de Estruturas de Dados"]
+    },
+    {
+      id: "psicologia",
+      title: "Psicologia Forense",
+      description: "Análise de sanidade mental de acusados, autópsia psicológica, profiling criminal e avaliação pericial de depoimentos judiciais.",
+      detailedDescription: "A Psicologia Forense atua na fascinante interseção entre o comportamento da mente humana e as exigências da lei. O psicólogo perito realiza avaliações clínicas de imputabilidade penal (se o réu possuía discernimento do ato), traça perfis de criminosos em série (criminal profiling), conduz entrevistas diagnósticas especiais com vítimas vulneráveis e ajuda a determinar a credibilidade de depoimentos capitais.",
+      image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
+      glowColor: "yellow",
+      skills: ["Perfilamento do Comportamento (Profiling)", "Autópsia Psicológica Multidisciplinar", "Avaliação da Credibilidade de Declarações"]
+    },
+    {
+      id: "ambiental",
+      title: "Perícia Ambiental",
+      description: "Investigação pericial de contaminação de mananciais, poluição industrial de solos, desmatamentos ilegais e crimes de caça biológica.",
+      detailedDescription: "Dedicada a apurar violações contra a integridade ecológica do planeta. O perito ambiental monitora lançamentos irregulares de metais pesados em rios, analisa a compactação quimio-física de solos afetados por agrotóxicos proibidos, usa dados satelitais e geoprocessamento para comprovar locais de queima intencional de florestas e avalia o impacto sistêmico em ecossistemas de preservação.",
+      image: "https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?q=80&w=600&auto=format&fit=crop",
+      glowColor: "cyan",
+      skills: ["Geoprocessamento Temporal de Satélites", "Coleta Química de Efluentes Líquidos", "Análise Fitossanitária de Solos Contaminados"]
+    },
+    {
+      id: "contabilidade",
+      title: "Contabilidade Forense",
+      description: "Investigação de crimes econômico-financeiros, desvios patrimoniais de dinheiro público, lavagem de capitais e auditoria criminal.",
+      detailedDescription: "A Contabilidade Forense é o ramo pericial responsável por rastrear transações financeiras fraudulentas, desvios corporativos, sonegação fiscal e lavagem de capitais ocultas sob complexas redes societárias. O perito analisa fluxos monetários digitais, balanços patrimoniais camuflados e livros fiscais, traduzindo crimes de colarinho branco em demonstrativos técnicos irrefutáveis.",
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
+      glowColor: "yellow",
+      skills: ["Rastreamento Sistêmico de Fluxos Monetários", "Auditoria de Balanços e Demonstrações Financeiras", "Ocultação Patrimonial e Redes Societárias"]
+    },
+    {
+      id: "veterinaria",
+      title: "Medicina Veterinária Forense",
+      description: "Investigação pericial de maus-tratos, abate e caça ilegal de fauna silvestre, e exames patológico-veterinários de animais.",
+      detailedDescription: "Ramo voltado à proteção animal e fiscalização sanitária legal. O perito veterinário elabora diagnósticos de maus-tratos em animais domésticos, investiga mortes intencionais por envenenamento fático animal, atua no rastreamento de contrabando de peles e espécimes silvestres sob proteção legal e realiza necropsias técnicas veterinárias para qualificar a causa mortis em inquéritos policiais.",
+      image: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=600&auto=format&fit=crop",
+      glowColor: "cyan",
+      skills: ["Patologia e Necropsia de Animais", "Laudo Clínico de Maus-Tratos Silvestres", "Detecção de Envenenamento de Bichos"]
     },
     {
       id: "balistica",
       title: "Balística Forense",
-      description: "Investigação física de projéteis, armas de fogo, estojos e trajetória de tiro.",
-      detailedDescription: "Estuda os fenômenos que ocorrem desde o acionamento do gatilho até o impacto do projétil no alvo. Através de microcomparação balística microscópica de estrias, o cientista consegue vincular de forma inquestionável um projétil a uma arma específica.",
+      description: "Estudo mecânico-dinâmico de disparos, trajetórias tridimensionais, características de armas de fogo e efeitos de projéteis.",
+      detailedDescription: "Dedicada a decifrar a mecânica e os efeitos físicos de armas de fogo. Abrange a balística interna (ciclo de disparo), externa (trajetória do projétil no ar com cálculos de vento e arrasto) e de efeitos (padrões de impacto, ricochetes e orifícios de entrada/saída). Através de microcomparação microscópica de estrias e resíduos de disparos (GSR), associa projéteis suspeitos diretamente à arma disparadora.",
       image: "https://images.unsplash.com/photo-1595152230535-043c9e117a6d?q=80&w=600&auto=format&fit=crop",
       glowColor: "yellow",
-      skills: ["Microcomparador de Estiras", "Análise de Trajetória e Perfil", "Identificação de Resíduos de Disparo (GSR)"]
+      skills: ["Microcomparação Óptica de Projéteis", "Varredura Química de Resíduos (GSR)", "Cálculo e Reconstrução de Trajetórias 3D"]
     },
     {
-      id: "papiloscopia",
-      title: "Papiloscopia",
-      description: "Identificação pelas impressões digitais, palmares ou plantares deixadas no crime.",
-      detailedDescription: "A ciência dos relevos cutâneos é um dos métodos mais robustos e antigos de identificação de suspeitos. Usando pós magnéticos, luzes ultravioletas ou reagentes de vapor de cianoacrilato, as digitais latentes são reveladas e comparadas em bancos públicos.",
-      image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=600&auto=format&fit=crop",
+      id: "documentoscopia",
+      title: "Documentoscopia Forense",
+      description: "Análise pericial de documentos físicos sob suspeita de adulterações, lavagem química de papel e análise grafotécnica de assinaturas.",
+      detailedDescription: "Focada na determinação da autenticidade ou falsidade de documentos, manuscritos, assinaturas e selos de fé pública. Os peritos utilizam fontes de radiação multiespectral, análise microscópica de cruzamento de traços de tintas de caneta e exames grafotécnicos de punho escritor — avaliando ritmo, velocidade, pegada, espaçamento e inclinação da caligrafia em contratos e correspondências misteriosas.",
+      image: "https://images.unsplash.com/photo-1455390582262-044c5c27a797?q=80&w=600&auto=format&fit=crop",
       glowColor: "cyan",
-      skills: ["Cianoacrilato em Vácuo", "Fórmula Cristológica de Vucetich", "AFIS (Bancos Biométricos Digitais)"]
+      skills: ["Perícia Grafotécnica Comparativa de Escrita", "Espectroscopia de Emissão de Pigmentos de Tintas", "Análise de Relevo e Pressão Físico-Mecânica"]
+    },
+    {
+      id: "audio_imagem",
+      title: "Áudio e Imagem Forense",
+      description: "Análise de autenticidade de vídeos e gravações acústicas, restauração de mídias turvas e biometria vocal de locutores.",
+      detailedDescription: "Esta disciplina lida com exames que envolvem o tratamento, preservação e identificação fônica e de vídeo. Os peritos identificam indícios de montagens ou cortes em vídeos residenciais e gravações de segurança, aplicam filtros matemáticos de redução de ruído para elevar vozes sussurradas e executam confrontos vocais por espectrografia de voz eletrônica bidimensional.",
+      image: "https://images.unsplash.com/photo-1530026405186-ed1ea0ac7a63?q=80&w=800&auto=format&fit=crop",
+      glowColor: "yellow",
+      skills: ["Exame Biométrico Vocal / Espectrografia", "Filtros Matemáticos de Restauração de Ruído", "Laudo de Autenticidade de Imagens e Vídeo"]
+    },
+    {
+      id: "reproducao_simulada",
+      title: "Reprodução Simulada",
+      description: "Modelagem fática espacial e reprodução cinemática tridimensional de crimes coordenando depoimentos de réus e testemunhas.",
+      detailedDescription: "Conhecida como reconstituição do crime, é um rito fático em que os peritos coordenam as versões dadas pelas testemunhas, vítimas e acusados diretamente no local dos fatos. Todo o trajeto espacial e temporal do evento é medido tecnicamente, recorrendo hoje a tecnologias GIS e modelagem 3D, certificando se as leis da física apoiam ou contradizem os testemunhos colhidos.",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop",
+      glowColor: "cyan",
+      skills: ["Modelagem de Cenários Espaciais (BIM/3D)", "Análise Cinemática Físico-Dinâmica", "Equacionamento de Distâncias e Ângulos de Tiro"]
     },
     {
       id: "medicina",
       title: "Medicina Legal",
-      description: "Análise médica de traumas, necropsias para estabelecer causa mortis e cronotanatognose.",
-      detailedDescription: "Funde os conhecimentos médicos com as necessidades judiciais. Inclui necropsias, determinação da hora exata do óbito (cronotanatognose) e exames de corpo de delito para documentação precisa de lesões físicas em vítimas sobreviventes.",
+      description: "Necropsias científicas, exames clínico-forenses de traumatologias, sexologia e tanatofisiologia em mortos e sobreviventes.",
+      detailedDescription: "União vital entre a ciência médica e o direito. Através da necropsia clínica-forense sistemática, o médico legista examina a sede e a natureza de lesões internas e externas, determinando a causa jurídica e fisiológica do óbito. Em sobreviventes, atua em exames traumatológicos para constatar abusos físicos, envenenamentos mecânicos ou erros de conduta que configurem relevância criminal.",
       image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=600&auto=format&fit=crop",
       glowColor: "yellow",
-      skills: ["Amostragem de Tanato-Química", "Entomologia Cadavérica", "Tomografia Computadorizada Forense"]
-    },
-    {
-      id: "antropologia",
-      title: "Antropologia Forense",
-      description: "Estudo de ossadas humanas para estimar idade, gênero, estatura e sinais patológicos.",
-      detailedDescription: "Identificação de remanescentes humanos esqueletizados em sepulturas clandestinas ou desastres em massa. Auxilia na estimativa da ancestralidade, gênero e ancestralidade cronológica a partir do exame pélvico e craniano e marcas de traumas ósseos perimortem.",
-      image: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=600&auto=format&fit=crop",
-      glowColor: "cyan",
-      skills: ["Análise Pubiana e Craniometria", "Simulação de Reconstrução Facial 3D", "Radiologia Comparativa"]
-    },
-    {
-      id: "computacao",
-      title: "Computação Forense",
-      description: "Investigação cibernética, recuperação de dados voláteis, arquivos criptografados e cibercrimes.",
-      detailedDescription: "Preservação e análise forense de mídias de armazenamento digital, redes e comunicações. A computação forense trabalha reconstruindo caminhos de rede, quebrando assinaturas criptografadas e identificando autoria de ataques virtuais.",
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop",
-      glowColor: "yellow",
-      skills: ["Imagem Forense de Bit-Stream", "Análise de Logs de Backdoor", "Recuperação de Arquivos Corrompidos"]
-    },
-    {
-      id: "investigacao",
-      title: "Investigação Criminal",
-      description: "Coordenação estratégica de evidências, depoimentos e análise comportamental.",
-      detailedDescription: "Amalgama dados materiais com padrões de comportamento humano (criminal profiling) no local de uma infração. Estabelece sequências factuais lógicas baseadas em vestígios e teorias científicas para reconstruir com exatidão o fato.",
-      image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
-      glowColor: "cyan",
-      skills: ["Criminologia Comportamental", "Preservação de Isolamento Primário", "Cadeia de Custódia Legal"]
+      skills: ["Tanatologia Forense e Autópsias Gerais", "Traumatologia Clínica de Impactos", "Estimativa do Cronograma e Intervalo Post-Mortem"]
     }
   ],
 
   vocationalQuestions: [
     {
-      id: "q1",
-      question: "Diante de um local de crime isolado, o que desperta mais a sua atenção de imediato?",
+      id: "vq_morte_violenta",
+      question: "Diante de um local de crime isolado envolvendo uma pessoa caída, qual vestígio físico você se sente prioritariamente motivado a documentar primeiro?",
       options: [
-        { text: "Copos ou seringas suspeitas com resíduos de fluidos desconhecidos.", pointsFor: "toxicologia" },
-        { text: "Marcas avermelhadas que parecem sangue em uma peça de vestuário.", pointsFor: "dna" },
-        { text: "A marca de impacto circular de um disparo e cápsulas de metal deflagradas no chão.", pointsFor: "balistica" },
-        { text: "Pegadas no piso arenoso ou uma marca sutil de gordura no trinco da janela.", pointsFor: "papiloscopia" }
+        { text: "Estudar o espalhamento geométrico, padrão e direção dos respingos de sangue nas paredes.", pointsFor: "morte_violenta" },
+        { text: "Buscar marcas de arrombamento, chaves michas ou impressões latentes nos cofres e gavetas.", pointsFor: "patrimonio" },
+        { text: "Coletar resíduos de pólvora e estrias do projétil de metal cravado na parede próxima.", pointsFor: "balistica" },
+        { text: "Investigar se há medicamentos sem bula na lixeira ou vestígios bioquímicos em copos d'água.", pointsFor: "toxicologia" }
       ]
     },
     {
-      id: "q2",
-      question: "Qual ferramenta clássica ou técnica de laboratório você gostaria de dominar primeiro?",
+      id: "vq_patrimonio",
+      question: "Qual dessas situações profissionais desafia mais o seu raciocínio lógico no cotidiano?",
       options: [
-        { text: "Cromatografia e espectrometria de massas e infusões para testar venenos.", pointsFor: "toxicologia" },
-        { text: "Amplificação de genes e extração de DNA de raízes de cabelo com centrífuga.", pointsFor: "dna" },
-        { text: "Câmera de alta velocidade para registrar dinâmica de fluidos e trajetórias balísticas.", pointsFor: "balistica" },
-        { text: "Estação de imagem biométrica digital rápida indexando minúcias de pele.", pointsFor: "papiloscopia" }
+        { text: "Entender como um invasor conseguiu violar fechaduras complexas, portões elétricos e cofres blindados sem ser visto.", pointsFor: "patrimonio" },
+        { text: "Conduzir avaliações psicológicas para entender as motivações internas e o transtorno mental de um réu acusado.", pointsFor: "psicologia" },
+        { text: "Rastrear canais de dados eletrônicos criptografados e analisar vírus instalados num servidor invadido.", pointsFor: "informatica" },
+        { text: "Investigar desvios de dinheiros corporativos camuflados em balanços contábeis e lavagem de ativos.", pointsFor: "contabilidade" }
       ]
     },
     {
-      id: "q3",
-      question: "Seu maior ponto forte na hora de resolver impasses no dia a dia é:",
+      id: "vq_toxicologia",
+      question: "Você tem interesse em analisar substâncias químicas e biológicas para identificar causas de intoxicação?",
       options: [
-        { text: "Persistência analitímica, adoro ler diagramas moleculares e fórmulas complexas.", pointsFor: "quimica" },
-        { text: "Habilidades com computadores, segurança de sistemas e detecção de fraudes digitais.", pointsFor: "computacao" },
-        { text: "Paciência e atenção extrema aos mínimos detalhes físicos e orgânicos humanos.", pointsFor: "medicina" },
-        { text: "Raciocínio metodológico, dedutivo e observação dos hábitos dos outros.", pointsFor: "investigacao" }
+        { text: "Sim, me atrai enormemente operar espectrometria para identificar fármacos abusados, drogas e compostos envenenados.", pointsFor: "toxicologia" },
+        { text: "Prefiro realizar a análise físico-química comparativa das fibras de papel e tintas de caneta para atestar fraudes.", pointsFor: "documentoscopia" },
+        { text: "Prefiro examinar corpos e tecidos biológicos humanos em autópsias corporais para descobrir lesões traumáticas de facas.", pointsFor: "medicina" },
+        { text: "Prendem mais a minha atenção os crimes ecológicos envolvendo lançamentos pesados industriais em rios fluminenses.", pointsFor: "ambiental" }
       ]
     },
     {
-      id: "q4",
-      question: "Você ficaria mais confortável em lidar profissionalmente com:",
+      id: "vq_quimica",
+      question: "Se você estivesse em um laboratório forense estadual avançado de alta tecnologia, qual o ensaio químico ideal para sua tese acadêmica?",
       options: [
-        { text: "Fórmulas químicas, reagentes e pós coloridos para detectar falsificação de drogas.", pointsFor: "quimica" },
-        { text: "Vasculhar servidores escondidos, códigos criptografados e metadados de arquivos deletados.", pointsFor: "computacao" },
-        { text: "Anatomia humana clínica, lesões físicas, ossos antigos e traumatismos.", pointsFor: "medicina" },
-        { text: "Entrevistas com testemunhas e a análise integrada de depoimentos e vestígios.", pointsFor: "investigacao" }
+        { text: "Identificação estrutural molecular de novas drogas sintéticas derivadas de anfetaminas apreendidas em raves.", pointsFor: "quimica" },
+        { text: "Análise quantitativa de resíduos de chumbo, antimônio e bário (GSR) coletados de peles de suspeitos de tiro.", pointsFor: "balistica" },
+        { text: "Amplificação genética e sequenciamento de perfis de DNA de micro-goticula celular de suor.", pointsFor: "genetica" },
+        { text: "Extração de metadados ocultos de arquivos binários corrompidos obtidos de navegadores anônimos de internet.", pointsFor: "informatica" }
       ]
     },
     {
-      id: "q5",
-      question: "Qual desses mitos das séries tipo 'CSI' mais incomoda o seu senso prático?",
+      id: "vq_genetica",
+      question: "Que tipo de prova legal, dotada de elevado rigor científico probabilístico, você acha mais irrefutável e respeitável para innocentar réus falsos?",
       options: [
-        { text: "Fazer análises bioquímicas completas sem controle de qualidade e calibração de máquina.", pointsFor: "toxicologia" },
-        { text: "Identificar o DNA de alguém em apenas cinco segundos usando uma tela 3D cheia de cores.", pointsFor: "dna" },
-        { text: "Atirar em um cadeado de aço e ele explodir sem resíduos de metal ou deformidade estrutural.", pointsFor: "balistica" },
-        { text: "Achar uma impressão digital perfeita em qualquer tipo de superfície sem pó revelador.", pointsFor: "papiloscopia" }
+        { text: "O perfil idêntico de DNA extraído de apenas um fio de cabelo ou gotícula invisível de suor na cena.", pointsFor: "genetica" },
+        { text: "A análise fatiada da dinâmica balística interna e as estrias incomparáveis deixadas no cano de metal.", pointsFor: "balistica" },
+        { text: "O estudo biomecânico espacial e depoimento contraditório rebatido pelas leis da física em reproduções simuladas.", pointsFor: "reproducao_simulada" },
+        { text: "A detecção de adulterações fiscais e notas fraudulentas rastreadas pelo extrato de contas de empresas de fachada.", pointsFor: "contabilidade" }
       ]
     },
     {
-      id: "q6",
-      question: "Como você se vê atuando ativamente nas Forças de Segurança ou Órgãos de Justiça?",
+      id: "vq_engenharia",
+      question: "Ao ver a notícia do colapso parcial de um viaduto urbano ou de um acidente complexo automobilístico, seu cérebro busca imediatamente investigar:",
       options: [
-        { text: "Em um laboratório estadual isolado de altíssima segurança, de jaleco branco executando espectroscopia.", pointsFor: "quimica" },
-        { text: "Uma sala de controle cibernética, descriptografando logs de ransowares de criminosos globais.", pointsFor: "computacao" },
-        { text: "Laudando causas de óbito ou examinando fraturas craniométricas complexas em necrotérios.", pointsFor: "medicina" },
-        { text: "Visitando diretamente as cenas de crimes e organizando os lacres de cadeia de custódia.", pointsFor: "investigacao" }
+        { text: "As leis de transferência de energia e conservação de momentum linear que explicam a fadiga metálica do asfalto.", pointsFor: "engenharia" },
+        { text: "A autenticidade de documentos de engenharia assinados, marcas hidráulicas do papel e canetas usadas nas fraudes.", pointsFor: "documentoscopia" },
+        { text: "Sinais biológicos de maus-tratos ou intoxicação em animais que pastavam nos entornos da estrutura.", pointsFor: "veterinaria" },
+        { text: "Estudar se houve crime cibernético para alterar os semáforos integrados de trânsito da avenida pública.", pointsFor: "informatica" }
       ]
     },
     {
-      id: "q7",
-      question: "Selecione a atividade extracurricular que mais te atrairia em um congresso forense:",
+      id: "vq_informatica",
+      question: "Você tem afinidade com tecnologia e gostaria de investigar crimes digitais e recuperação de dados?",
       options: [
-        { text: "Workshop de detecção de venenos e entorpecentes em copos descartados.", pointsFor: "toxicologia" },
-        { text: "Prática em gel de eletroforese para perfil de matches de paternidade.", pointsFor: "dna" },
-        { text: "Software de mapeamento tridimensional de projéteis e ricochetes.", pointsFor: "balistica" },
-        { text: "Técnicas modernas de revelação de digitais sob temperatura extrema com fumaça.", pointsFor: "papiloscopia" }
+        { text: "Sim perfeitamente! Ficar horas rastreando logs de invasão criminosa, servidores ocultos, Bitcoins e dados deletados.", pointsFor: "informatica" },
+        { text: "Prefiro examinar armas de fogo, estrias metálicas helicoidais e calcular ângulos de trajetórias de tiro de revólver.", pointsFor: "balistica" },
+        { text: "Gostaria de aplicar o conhecimento médico-legal especializado na análise direta de cadáveres humanos no IML.", pointsFor: "medicina" },
+        { text: "Me sinto motivado a investigar desmatamentos ilegais rastreados por lentes multiespectrais de satélite no Estado.", pointsFor: "ambiental" }
       ]
     },
     {
-      id: "q8",
-      question: "Durante um mistério policial, que detalhe decisivo na mesa de cabeceira você investigaria primeiro?",
+      id: "vq_psicologia",
+      question: "Você gostaria de aplicar conhecimentos psicológicos em investigações criminais e perícias judiciais?",
       options: [
-        { text: "Gotas secas de soro e um composto medicamentoso tarjado sem rótulo clínico.", pointsFor: "toxicologia" },
-        { text: "Uma mecha isolada de cabelo loiro presa a uma escova de dentes preta.", pointsFor: "dna" },
-        { text: "Um cartucho não deflagrado de calibre .380 caído atrás do criado-mudo.", pointsFor: "balistica" },
-        { text: "Manchas imperceptíveis de secreção de suor na tela do celular da vítima.", pointsFor: "papiloscopia" }
+        { text: "Com certeza, traçando perfis comportamentais de delinquentes (profiling) e avaliando declarações de vítimas.", pointsFor: "psicologia" },
+        { text: "Não, me atrai mais estudar as marcas do punho e fisionomia da caligrafia de assinaturas em contratos.", pointsFor: "documentoscopia" },
+        { text: "Prefiro realizar a análise toxicológica laboratorial de venenos em amostras biológicas de sangue.", pointsFor: "toxicologia" },
+        { text: "Prefiro investigar desvios bilionários públicos por sistemas de contabilidade pública e auditorias fiscais.", pointsFor: "contabilidade" }
       ]
     },
     {
-      id: "q9",
-      question: "Qual dessas matérias acadêmicas mais despertava o seu apreço no colégio?",
+      id: "vq_ambiental",
+      question: "Você se interessa por investigar crimes relacionados ao meio ambiente e impactos ecológicos?",
       options: [
-        { text: "Química orgânica, hidrocarbonetos, soluções ácidas e misturas complexas.", pointsFor: "quimica" },
-        { text: "Informática, lógica de algorítmos ou matemática combinatória.", pointsFor: "computacao" },
-        { text: "Biologia humana, filogenia, estrutura celular e fisiologia.", pointsFor: "medicina" },
-        { text: "História, ciências sociais, redação jurídica ou psicologia social.", pointsFor: "investigacao" }
+        { text: "Sim! Rastrear vazamentos tóxicos, despejos ilegais industriais, desmatamentos por GPS e danos aos ecossistemas do Rio.", pointsFor: "ambiental" },
+        { text: "Prefiro analisar o comportamento psicológico de agressores ou transtornos psicológicos em litígios criminais.", pointsFor: "psicologia" },
+        { text: "Prefiro decodificar sistemas de computadores invadidos e recuperar chaves privadas cripto-digitais furtadas.", pointsFor: "informatica" },
+        { text: "Prefiro reconstruir trajetórias de projéteis em cenas de balística fechadas usando scanners a laser.", pointsFor: "balistica" }
       ]
     },
     {
-      id: "q10",
-      question: "Uma grande falha que você gostaria de corrigir em investigações obsoletas é:",
+      id: "vq_contabilidade",
+      question: "Se você se deparasse com o cofre de uma comissão investigadora sobre desfalques corporativos milionários, qual seria seu instinto de busca?",
       options: [
-        { text: "Erros de medição na concentração exata de drogas letais no tecido metabólico.", pointsFor: "toxicologia" },
-        { text: "Contaminações biológicas por falta de traje hermético dos operadores periciais.", pointsFor: "dna" },
-        { text: "Determinar erroneamente a velocidade angular de um tiro por ângulo de desvio visual incorreto.", pointsFor: "balistica" },
-        { text: "Falta de banco integrado eletrônico nacional para cruzamento ágil de impressões digitais.", pointsFor: "papiloscopia" }
+        { text: "Auditar extratos bancários, comparar planilhas de entrada/saída financeira e desmascarar lavagem eletrônica.", pointsFor: "contabilidade" },
+        { text: "Examinar marcas dactilares deixadas no painel digital de senha do cofre usando pós eletrostáticos.", pointsFor: "patrimonio" },
+        { text: "Restaurar arquivos excluídos e conversas ocultas de celulares dos diretores da empresa.", pointsFor: "informatica" },
+        { text: "Realizar testes químicos rápidos para identificar resíduos de maçarico contra a chapa metálica da porta.", pointsFor: "quimica" }
       ]
     },
     {
-      id: "q11",
-      question: "Qual cenário hipotético mais desafia o seu cérebro de forma divertida?",
+      id: "vq_veterinaria",
+      question: "Se uma denúncia apontasse maus-tratos generalizados ou caça clandestina predatória de espécies de animais nas serras do Estado, você atuaria focando em:",
       options: [
-        { text: "Saber se uma pílula suspeita se trata de um novo análogo sintético alucinógeno.", pointsFor: "quimica" },
-        { text: "Rastrear de onde partiu um e-mail falso anônimo que chantageou autoridades públicas.", pointsFor: "computacao" },
-        { text: "Interpretar se o padrão das fraturas de dentes indica uma queda livre ou pancada seca direta.", pointsFor: "medicina" },
-        { text: "Reconstruir a cronologia detalhada das 5 horas anteriores de um crime usando filmagens urbanas fragmentadas.", pointsFor: "investigacao" }
+        { text: "Fazer a necropsia veterinária nos animais apreendidos para qualificar envenenamento fático ou maus-tratos traumáticos.", pointsFor: "veterinaria" },
+        { text: "Proceder à avaliação de lesões físicas em seres humanos que presenciaram e combateram os caçadores no local.", pointsFor: "medicina" },
+        { text: "Analisar as pegadas, marcas de desgaste mecânico de cercas e pneus de jipes suspeitos no terreno do fato.", pointsFor: "patrimonio" },
+        { text: "Rastrear as mensagens de áudio e ligações de rádio interceptadas do grupo por meios de acústica computada.", pointsFor: "audio_imagem" }
       ]
     },
     {
-      id: "q12",
-      question: "Que característica da perícia criminal você considera mais honrosa e valiosa?",
+      id: "vq_balistica",
+      question: "Você se sente motivado a estudar armas de fogo e trajetórias de projéteis em investigações criminais?",
       options: [
-        { text: "Evitar a injustiça de envenenamentos silenciosos ou negligências farmacêuticas.", pointsFor: "toxicologia" },
-        { text: "Garantir a certeza biológica irrecusável pelo DNA, inocentando falsos acusados.", pointsFor: "dna" },
-        { text: "Identificar cientificamente a arma real que proferiu um tiro para fins de condenação precisa.", pointsFor: "balistica" },
-        { text: "Associar o autor diretamente a tocar em objetos cruciais na cena, via biometria.", pointsFor: "papiloscopia" }
+        { text: "Sim, considero focar na mecânica do tiro, mapeamento tridimensional de trajetos de balas e comparação microscópica.", pointsFor: "balistica" },
+        { text: "Prefiro operar genotipagem estatística de DNA em laboratórios limpos para determinar identidades periciais.", pointsFor: "genetica" },
+        { text: "Gostaria de me especializar em analisar fonicamente gravações telefônicas ameaçadoras e autenticidade de áudios.", pointsFor: "audio_imagem" },
+        { text: "Prefiro estudar o histórico social do acusado e traçar seu perfil de temperamento psicossocial.", pointsFor: "psicologia" }
       ]
     },
     {
-      id: "q13",
-      question: "Se você pudesse herdar um grande invento tecnológico da área hoje, teria:",
+      id: "vq_documentoscopia",
+      question: "Diante de uma carta de testamento polêmica sob disputa de herdeiros bilionários, como você ajudaria o juiz do caso?",
       options: [
-        { text: "Um espectômetro de laboratório portátil do tamanho de um celular para drogas imediatas.", pointsFor: "quimica" },
-        { text: "Um decriptador quântico de chaves e discos rígidos corrompidos por criminosos virtuais.", pointsFor: "computacao" },
-        { text: "Um scanner portátil de feixe térmico para verificar vasos sanguíneos pós-morte sem cortes.", pointsFor: "medicina" },
-        { text: "Um software que une as manchas de sangue suspensas ao vento em trajetórias vetoriais 3D.", pointsFor: "investigacao" }
+        { text: "Elaborando um laudo grafotécnico minucioso do punho escritor e medindo a velocidade e pressão do traço da caneta.", pointsFor: "documentoscopia" },
+        { text: "Verificando se as vozes das gravações digitais do falecido confessando a divisão batem com seu padrão de fala biológico.", pointsFor: "audio_imagem" },
+        { text: "Analisando bioquimicamente vestígios de venenos na saliva colada no selo físico da carta rasgada.", pointsFor: "toxicologia" },
+        { text: "Decodificando os dados e metadados de criação do arquivo de texto do testamento guardado em cartório virtual.", pointsFor: "informatica" }
       ]
     },
     {
-      id: "q14",
-      question: "Pense na palavra 'VESTÍGIO'. Qual o primeiro sinônimo espontâneo em sua mente?",
+      id: "vq_audio_imagem",
+      question: "Caso um processo penal crucial dependesse da veracidade de uma gravação telefônica ou vídeo borrado de vigilância, você gostaria de:",
       options: [
-        { text: "Molécula residual oculta em solventes.", pointsFor: "toxicologia" },
-        { text: "Elemento de DNA encapsulado em células.", pointsFor: "dna" },
-        { text: "Cartucho metálico de munição expansiva.", pointsFor: "balistica" },
-        { text: "Uma crista papilar oleosa em superfícies porosas.", pointsFor: "papiloscopia" }
+        { text: "Restaurar frames, analisar ruídos térmicos de filtros e comparar os formantes da voz do locutor na onda fônica.", pointsFor: "audio_imagem" },
+        { text: "Elaborar depoimento com modelagem espacial fática reencenando os movimentos físicos das pessoas envolvidas.", pointsFor: "reproducao_simulada" },
+        { text: "Avaliar se as cicatrizes exibidas no vídeo condizem com as lesões laudadas em corpo de delito médico-legal.", pointsFor: "medicina" },
+        { text: "Rastrear se a câmera IP que salvou o vídeo foi invadida externamente por manipulação de endereço cibernético.", pointsFor: "informatica" }
       ]
     },
     {
-      id: "q15",
-      question: "Para você, o que torna a ciência aplicada à perícia tão emocionante?",
+      id: "vq_reproducao_simulada",
+      question: "Se um réu alega legítima defesa contra tiro em via pública, mas as testemunhas contam histórias contraditórias, qual o seu instinto pericial?",
       options: [
-        { text: "A química invisível que revela mistérios imperceptíveis ao olho humano.", pointsFor: "quimica" },
-        { text: "O xadrez eletrônico contra cibercriminosos que acham que apagar o histórico os salva.", pointsFor: "computacao" },
-        { text: "Interpretar o silêncio do corpo humano e falar legalmente em nome da vítima.", pointsFor: "medicina" },
-        { text: "A arte de montar um quebra-cabeça de mil peças em que nada se encaixa à primeira vista.", pointsFor: "investigacao" }
+        { text: "Reconstruir faticamente a dinâmica da cena em um modelo 3D com as versões físicas possíveis, provando sua compatibilidade ou falsidade física.", pointsFor: "reproducao_simulada" },
+        { text: "Analizar se há distorções e evidências de montagens de áudio nas ligações que testemunhas fizeram para a polícia.", pointsFor: "audio_imagem" },
+        { text: "Obter perfis biológicos de DNA a partir das marcas de dentes deixados em um objeto mordido nas cercanias.", pointsFor: "genetica" },
+        { text: "Rastrear os contratos financeiros das partes envolvidas buscando detectar ocultações monetárias e subornos fiscais.", pointsFor: "contabilidade" }
+      ]
+    },
+    {
+      id: "vq_medicina",
+      question: "Você gostaria de aplicar conhecimentos médicos em investigações criminais e perícias judiciais?",
+      options: [
+        { text: "Sim! Trabalhar no IML em exames de corpo de delito clínicos e exames detalhados de autópsias e lesões corporais.", pointsFor: "medicina" },
+        { text: "Prefiro investigar marcas e lesões traumáticas sofridas exclusivamente por animais domésticos ou silvestres.", pointsFor: "veterinaria" },
+        { text: "Prefiro realizar perícia estrutural de colapso de concreto armado de obras civis e resistências mecânicas de asfalto.", pointsFor: "engenharia" },
+        { text: "Desejo realizar exames físicos e químicos comparativos de assinaturas fraudadas com técnicas de grafotecnia.", pointsFor: "documentoscopia" }
       ]
     }
   ],
 
   vocationalResults: {
+    morte_violenta: {
+      id: "morte_violenta",
+      title: "Local de Crime contra a Pessoa (Morte Violenta)",
+      profile: "Metodologista de Escopo Geral, Focado em Detalhes Fáticos e Preservação.",
+      description: "Você possui um perfil atento, altamente concentrado e resiliente. Interessa-se pela preservação fática e coordenação científica de vestígios em locais de extrema relevância, como homicídios e mortes violentas em geral.",
+      image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
+      skills: ["Análise de Respingos de Sangue", "Exame de Perinecropia de Campo", "Cadeia de Custódia Integrada"],
+      curiosities: [
+        "A posição final dos respingos de sangue nas paredes pode calcular o ângulo e velocidade do impacto físico sofrido.",
+        "A fita zebrada isolando a cena do crime é a salvaguarda de mais de 80% das evidências que seriam contaminadas nos primeiros minutos."
+      ],
+      explanation: "Você se encaixa perfeitamente na ala investigativa e de campo das ciências forenses. Seu olhar clínico registrará detalhes fundamentais que unificam e dão confiabilidade legal aos laudos periciais e inquéritos."
+    },
+    patrimonio: {
+      id: "patrimonio",
+      title: "Local de Crime contra o Patrimônio",
+      profile: "Investigador Mecânico de Barreiras, Rígido e Atento a Violações Físicas.",
+      description: "Seu foco profissional reside na identificação técnica e dedutiva de crimes como furtos qualificados, arrombamentos, roubos organizados de caixas automáticos e danos físicos estruturais intencionais de terceiros.",
+      image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=600&auto=format&fit=crop",
+      skills: ["Análise de Superação de Obstáculos", "Revelação de Impressões Latentes", "Avaliação Econômica de Danos"],
+      curiosities: [
+        "Marcas de pegadas na derme de poeiras do chão podem revelar a marca do calçado e até estimar a altura do suspeito.",
+        "Mais de 15% dos casos patrimoniais de grande porte envolvem simulação planejada para lavagem e recuperação de seguros privados."
+      ],
+      explanation: "Você adora equacionar processos complexos mecânicos de intrusão e decifrar como e quem superou barreiras físicas. Suas análises serão de valor substancial para seguradoras, bancos e delegacias patrimoniais."
+    },
     toxicologia: {
       id: "toxicologia",
       title: "Toxicologia Forense",
@@ -324,9 +423,9 @@ export const INITIAL_CONTENT: SiteContent = {
       ],
       explanation: "A química forense une os materiais inorgânicos com os segredos fáticos. Você será de fundamental valia para polícias estaduais e federais em laudos contra narcóticos e fraudes fiscais de grande escala."
     },
-    dna: {
-      id: "dna",
-      title: "DNA Forense",
+    genetica: {
+      id: "genetica",
+      title: "Genética Forense",
       profile: "Geneticista de Microrregiões, Guardião de Evidências Biológicas.",
       description: "Seu foco reside na biologia molecular pura. Interessa-se pela identificação inequívoca de pessoas biológicas por meio de exames minuciosos de micropartículas de saliva, sêmen, tecidos musculares ou fios de cabelo coletados em locais investigados.",
       image: "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=600&auto=format&fit=crop",
@@ -336,6 +435,84 @@ export const INITIAL_CONTENT: SiteContent = {
         "Um fragmento milimétrico de casca de chiclete mascado décadas atrás pode desvendar um crime arquivado."
       ],
       explanation: "Você adora a exatidão quantitativa probabilística do DNA. Com suas descobertas, a justiça pode apontar sem margem de erro o suspeito do fato ou trazer paz a famílias em buscas de paternidades ou entes queridos."
+    },
+    engenharia: {
+      id: "engenharia",
+      title: "Engenharia Forense",
+      profile: "Físico Analítico Estrutural, Rebanhador de Vetores e Impactos Cromáticos.",
+      description: "Você possui afinidade com cálculos físicos, mecânicos de estradas e rigores estáticos de edificações. Atuará investigando colapsos de moradias, incêndios acidentais em fábricas, falhas térmicas mecânicas industriais e velocidade veicular em colisões.",
+      image: "https://images.unsplash.com/photo-1581093588401-fbb62a02f120?q=80&w=800&auto=format&fit=crop",
+      skills: ["Cálculo Mecânico de Frenagem", "Determinação de Fadiga de Materiais", "Modelagem de Impacto Vetorial"],
+      curiosities: [
+        "A deformação plástica sofrida pelas chapas metálicas de um carro permite calcular a velocidade exata no milissegundo do choque.",
+        "Resistência e flexibilidade do concreto deixam marcas que indicam se a queda estrutural deu-se por vento ou descaso construtivo."
+      ],
+      explanation: "Você se dedicará a desvendar acidentes estruturais e fatalidades mecânicas complexas que envolvem grandes corporações ou desastres de transporte público, servindo à justiça com precisão de engenharia matemática."
+    },
+    informatica: {
+      id: "informatica",
+      title: "Informática Forense",
+      profile: "Gênio Digital, Investigador de Cadeias Eletrônicas e Redes.",
+      description: "Seu cérebro flui melhor com lógica computacional, decodificações e extração segura de vestígios que residem em memórias virtuais, nuvens de dados, mensagens criptografadas ocultas e computadores invadidos por quadrilhas de fraude na internet.",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop",
+      skills: ["Aquisição Hermética de Imagens de Disco", "Análise de Cabeçalhos e Hexadecimais", "Rastreabilidade IP de Redes Tor"],
+      curiosities: [
+        "Instalar softwares normais de cópia em HDs altera metadados vitais de datas, por isso usam-se 'bloqueadores de escrita física'.",
+        "A geolocalização oculta de uma foto no Instagram pode revelar onde se encontrava um galpão clandestino remoto."
+      ],
+      explanation: "Você combaterá o crime moderno que reside atrás das telas. Sua engenhosidade informática e dedetização de vírus corporativos manterá a integridade de dados e localizará criminosos invisíveis no ciberespaço."
+    },
+    psicologia: {
+      id: "psicologia",
+      title: "Psicologia Forense",
+      profile: "Terapeuta Antropológico, Profiler Comportamental e Sócio-Analista.",
+      description: "Você possui notável inteligência emocional e interesse pelo íntimo da mente humana e do comportamento social. Atuará na estimativa de sanidade mental criminal de criminosos confessionários, perfis sociais de serial killers (profiling) e depoimentos especiais.",
+      image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
+      skills: ["Entrevista Cognitiva Avançada", "Profiling Temático Criminal", "Avaliação de Imputabilidade Social"],
+      curiosities: [
+        "A autópsia psicológica estuda retrospectivamente o diário e depoimentos de alguém falecido para atestar o estado mental presumido do mesmo.",
+        "Distorções involuntárias do testemunho humano por falsas memórias são desvendadas por exames linguísticos forenses meticulosos."
+      ],
+      explanation: "Seu tato interpessoal, sensibilidade psicológica e rigor clínico-penal fornecerão contribuição indispensável a magistrados do direito familiar, adoções e avaliações de periculosidade criminal em presídios federais."
+    },
+    ambiental: {
+      id: "ambiental",
+      title: "Perícia Ambiental",
+      description: "Investigação pericial de contaminação de mananciais, poluição industrial de solos, desmatamentos ilegais e crimes de caça biológica.",
+      profile: "Ecologista Químico de Campo, Geógrafo e Defensor do Equilíbrio Planetário.",
+      image: "https://images.unsplash.com/photo-1470240731273-7821a6eeb6bd?q=80&w=600&auto=format&fit=crop",
+      skills: ["Geoprocessamento Temporal de Satélites", "Coleta Química de Efluentes Líquidos", "Análise Fitossanitária de Solos Contaminados"],
+      curiosities: [
+        "Variações térmicas vistas por fotos aéreas identificam rios poluídos de vazamentos químicos invisíveis por baixo da copa das árvores.",
+        "Vestígios químicos e microscópicos de pesticidas proibidos globalmente nas folhas comprovam a ilicitude do plantio agrícola perante a lei brasileira."
+      ],
+      explanation: "Você usará ciências ambientais conjugadas à criminalística legal para processar corporações poluidoras e resguardar ecossistemas vulneráveis do Rio de Janeiro e do Brasil."
+    },
+    contabilidade: {
+      id: "contabilidade",
+      title: "Contabilidade Forense",
+      profile: "Auditor de Estruturas Fiscais, Rastreador Monetário de Sonegações.",
+      description: "Sua lógica prospera diante de livros tributários, extratos bancários digitais, transações financeiras suspeitas e ocultações de faturamentos de alto escalão político ou empresarial.",
+      image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=400&auto=format&fit=crop",
+      skills: ["Rastreamento de Fluxo Monetário", "Controle Fiscal Geral Sócio-Empresarial", "Identificação de Redes Corporativas"],
+      curiosities: [
+        "Al Capone, um dos maiores criminosos mafiosos das Américas, só foi encarcerado devido à perícia contábil de imposto de renda da Receita Federal americana.",
+        "Algoritmos contábeis modernos rastreiam fracionamento de envios de Pix fatiados buscando desviar alertas contra branqueamento de capital."
+      ],
+      explanation: "Você se tornará a muralha contra o crime financeiro e corrupções, provando de forma inquestionável desvios públicos e lavagens de ativos através da ciência dos números patrimoniais empresariais."
+    },
+    veterinaria: {
+      id: "veterinaria",
+      title: "Medicina Veterinária Forense",
+      profile: "Patologista Veterinário, Patrono de Espécies Silvestres de Campo.",
+      description: "Você possui amor pela fauna combinado com espírito científico de bancada. Atuará na certificação clínica ou patológica post-mortem veterinária de abusos físicos, agressões intencionais contra bichos e caçadas predatórias.",
+      image: "https://images.unsplash.com/photo-1582719471384-894fbb16e074?q=80&w=600&auto=format&fit=crop",
+      skills: ["Determinação de Causa Mortis de Animais", "Laudo Clínico-Forense Veterinário", "Identificação Genética e Taxonomia de Espécies"],
+      curiosities: [
+        "A radiografia médica em gansos ou pássaros selvagens caçados ajuda a constatar calibre exato do chumbo do cartucho criminoso.",
+        "Exames toxicológicos de órgãos animais revelam iscas envenenadas clandestinas (chumbinho) dadas de má fé."
+      ],
+      explanation: "Você dará assessoria jurídica indispensável na punição de maus-tratos em animais domésticos e fiscalizações globais de comercializações predatórias e ilegais de biodiversidade nacional."
     },
     balistica: {
       id: "balistica",
@@ -350,22 +527,48 @@ export const INITIAL_CONTENT: SiteContent = {
       ],
       explanation: "Você usará matemática aplicada, análise macroscópica de metais e microscopia comparativa para ser peça-chave na solução de confrontos balísticos militares, policiais ou civis."
     },
-    papiloscopia: {
-      id: "papiloscopia",
-      title: "Papiloscopia / Biometria Humana",
-      profile: "Dactiloscopista Visual, Detalhista de Texturas de Pele.",
-      description: "Você ama padrões de formas na pele e identificação biométrica. A papiloscopia atua na busca sistemática por marcas dactilares em diversos tipos de superfícies úmidas ou secas usando pós finos refletores de luz ou reações de calor por cianoacrilato.",
-      image: "https://images.unsplash.com/photo-1510511459019-5dda7724fd87?q=80&w=600&auto=format&fit=crop",
-      skills: ["Classificação de Cristas de Pele", "Digitalizadores Ópticos Policiais", "Vaporização e Sublimação de Iodo"],
+    documentoscopia: {
+      id: "documentoscopia",
+      title: "Documentoscopia Forense / Grafotecnia",
+      profile: "Analista de Autenticidade Gráfica, Detetive de Assinaturas e Fraudes Fiscais.",
+      description: "Você possui perfil atento às sutilezas manuscritas, texturas de papéis e assinaturas. A documentoscopia forense analisa contratos suspeitos, falsificações de cédulas de dinheiro e autoria de cartas de extorsão pelo exame grafotécnico.",
+      image: "https://images.unsplash.com/photo-1455390582262-044c5c27a797?q=80&w=600&auto=format&fit=crop",
+      skills: ["Perícia Grafotécnica de Punho Escritor", "Análise de Radiação Multiespectral de Tintas", "Verificação Física de Pressão de Caneta"],
       curiosities: [
-        "A papiloscopia de impressões digitais foi desenvolvida no século XIX e até hoje nunca se encontrou duas idênticas.",
-        "Koalas possuem impressões digitais tão parecidas com as humanas que poderiam confundir uma equipe inteira de detetives!"
+        "A grafotecnia avalia características involuntárias do punho escritor, como o ritmo, velocidade e pressão, tornando a imitação perfeita impossível.",
+        "O exame do cruzamento de traços permite determinar qual palavra foi escrita primeiro em um papel fraudado."
       ],
-      explanation: "Sua concentração impecável permite detectar minúcias invisíveis de sulcos e ramificações que dão identidade unívoca a pessoas num piscar de olhos."
+      explanation: "Seu foco excepcional e paciência analítica farão de você um especialista em desmascarar falsários, fraudes de grande escala e assegurar a fé pública em investigações financeiras."
+    },
+    audio_imagem: {
+      id: "audio_imagem",
+      title: "Áudio e Imagem Forense",
+      profile: "Analista de Sinais de Ondas Fônicas, Detetive Acústico e Visual.",
+      description: "Você se entusiasma em decifrar sinais contidos em arquivos acústicos e visuais, filtrando ruídos, localizando indícios de montagens ocultas e atestando a identidade vocal de falantes em gravações de áudio.",
+      image: "https://images.unsplash.com/photo-1530026405186-ed1ea0ac7a63?q=80&w=800&auto=format&fit=crop",
+      skills: ["Confronto Acústico de Formantes Vocais", "Tratamento Algorítmico de Ruído e Eco", "Verificação Física de Pixels Térmicos de Vídeo"],
+      curiosities: [
+        "A espectrografia de voz transforma as palavras ditas em um mapa visual bidimensional tão único quanto uma impressão digital humana.",
+        "Alterações sutis no ruído elétrico de fundo da rede (ENF) de gravação de áudio conseguem apontar em que hora e data exata o registro se deu."
+      ],
+      explanation: "Sua audição e olhar ultra refinados guiarão investigações em escutas legais autorizadas, ajudando a garantir a fidedignidade material de fotos de vigilância e gravações acústicas criminais."
+    },
+    reproducao_simulada: {
+      id: "reproducao_simulada",
+      title: "Reprodução Simulada",
+      profile: "Modelador Físico de Dynamics, Arquiteto da Reconstituição Forense.",
+      description: "Você adora correlacionar múltiplos relatos, posições corporais e dados fáticos para entender de que forma temporal e mecânica todo o evento do crime ocorreu nos mínimos detalhes físicos.",
+      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop",
+      skills: ["Reconstrução Virtual 3D de Ambientes", "Exame Comparativo de Compatibilidade Cinemática", "Mapeamento Métrico de Disparos de Campo"],
+      curiosities: [
+        "Simulações espaciais modernas em realidade virtual do crime ajudam jurados no tribunal a visualizarem o fato de múltiplos ângulos espaciais.",
+        "Em reconstituições reais nas ruas do Estado, isolam-se bairros inteiros e medem-se a atenuância de barulho fático noturno de tiros."
+      ],
+      explanation: "Você se tornará o maestro científico que une laudos individuais soltos de DNA, necropsias e balísticas em um panorama dinâmico unificado, esclarecendo de vez impasses periciais."
     },
     medicina: {
       id: "medicina",
-      title: "Medicina Legal / Antropologia",
+      title: "Medicina Legal / Patologia",
       profile: "Tanatologista, Investigador da Anatomia e Traumatologia Forense.",
       description: "Seu pilar fundamental reside em desvendar as causas mortis e reconstruir o corpo. Interessa-se pelo entendimento fisiológico e biológico de marcas traumáticas, lesões em tecidos moles e exames de estruturas esqueletizadas identificando perfis médicos.",
       image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?q=80&w=600&auto=format&fit=crop",
@@ -375,32 +578,6 @@ export const INITIAL_CONTENT: SiteContent = {
         "A entomologia estuda quais famílias de moscas colonizam o cadáver para cravar as horas exatas de sua morte."
       ],
       explanation: "Você se dedica à mais humana e profunda das perícias, ouvindo o que os tecidos e ossadas dizem para garantir a proteção física da população e a elucidação definitiva de fatalidades."
-    },
-    computacao: {
-      id: "computacao",
-      title: "Computação Forense",
-      profile: "Gênio Digital, Investigador de Cadeias Eletrônicas e Redes.",
-      description: "Seu cérebro flui melhor com lógica computacional, decodificações e extração segura de vestígios que residem em memórias virtuais, nuvens de dados, mensagens criptografadas ocultas e computadores invadidos por quadrilhas de fraude na internet.",
-      image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=600&auto=format&fit=crop",
-      skills: ["Aquisição Hermética de Imagens de Disco", "Análise de Cabeçalhos e Hexadecimais", "Rastreabilidade IP de Redes Tor"],
-      curiosities: [
-        "Instalar softwares normais de cópia em HDs altera metadados vitais de datas, por isso usam-se 'bloqueadores de escrita física'.",
-        "A geolocalização oculta de uma foto no Instagram pode revelar onde se encontrava um galpão clandestino remoto."
-      ],
-      explanation: "Você combaterá o crime moderno que reside atrás das telas. Sua engenhosidade informática e dedetização de vírus corporativos manterá a integridade de dados e localizará criminosos invisíveis no ciberespaço."
-    },
-    investigacao: {
-      id: "investigacao",
-      title: "Investigação Criminal / Profiling",
-      profile: "Metodologista de Escopo Geral, Analista Comportamental.",
-      description: "Seu interesse principal é a visão holística do evento criminal, dedução mútua fática, elucidação lógica e cruzamento integrado de informações humanas e materiais para a remontagem cronológica impecável da verdade.",
-      image: "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?q=80&w=600&auto=format&fit=crop",
-      skills: ["Preservação de Locais Isolados", "Análise Dinâmica de Cadeia de Custódia", "Reconstrução 3D de Cenas do Fato"],
-      curiosities: [
-        "Um local de crime mal isolado nos primeiros 10 minutos perde cerca de 80% dos vestígios válidos e úteis de biometria.",
-        "O Profiling estuda o modus operandi e assinatura do autor para estreitar a busca de listas volumosas de suspeitos."
-      ],
-      explanation: "Você é o maestro da ciência jurídica policial. Sabe coordenar peritos especiais, escutar testemunhos com rigor analítico e tecer um laudo de reconstrução fática que convencerá juízes e jurados no tribunal."
     }
   },
 
@@ -564,7 +741,7 @@ export const INITIAL_CONTENT: SiteContent = {
     {
       id: "lib3",
       title: "Laudo Pericial: DNA e Paternidade Complexa",
-      author: "Laboratório de Genética LACIF UFF",
+      author: "Laboratório de Genética LACiF UFF",
       category: "Estudo de Caso",
       url: "https://example.com/artigo-dna-lacif.pdf",
       description: "Mapeamento genético simulado de parentesco de herança biológica cruzada utilizando loci hipervariáveis.",
@@ -597,7 +774,7 @@ export const INITIAL_CONTENT: SiteContent = {
       date: "Outubro de 2025",
       category: "Treinamento",
       image: "https://images.unsplash.com/photo-1507679799987-c73779587ccf?q=80&w=800&auto=format&fit=crop",
-      description: "Membros da LACIF UFF isolando área externa com fita zebrada amarela para análise de trajetórias de pegadas e cartuchos."
+      description: "Membros da LACiF UFF isolando área externa com fita zebrada amarela para análise de trajetórias de pegadas e cartuchos."
     },
     {
       id: "gal2",
@@ -628,8 +805,8 @@ export const INITIAL_CONTENT: SiteContent = {
   faqs: [
     {
       id: "faq1",
-      question: "O que é a LACIF UFF?",
-      answer: "A LACIF UFF é a Liga Acadêmica de Ciências Forenses da Universidade Federal Fluminense. É uma associação científica sem fins lucrativos, gerida por estudantes sob a supervisão de professores, com foco no estudo técnico, acadêmico e prático de perícias criminais e balísticas."
+      question: "O que é a LACiF UFF?",
+      answer: "A LACiF UFF é a Liga Acadêmica de Ciências Forenses da Universidade Federal Fluminense. É uma associação científica sem fins lucrativos, gerida por estudantes sob a supervisão de professores, com foco no estudo técnico, acadêmico e prático de perícias criminais e balísticas."
     },
     {
       id: "faq2",
@@ -653,7 +830,7 @@ export const INITIAL_CONTENT: SiteContent = {
     },
     {
       id: "faq6",
-      question: "A LACIF UFF possui convênios com corporações policiais?",
+      question: "A LACiF UFF possui convênios com corporações policiais?",
       answer: "A Liga realiza eventos, convida e recebe peritos da Polícia Civil e Federal para palestras e workshops práticos simulados, promovendo grande networking institucional com os órgãos de segurança oficial do Estado."
     },
     {
@@ -681,6 +858,7 @@ export const INITIAL_CONTENT: SiteContent = {
   selectiveProcess: {
     editalUrl: "https://example.com/edital_lacif_2026.pdf",
     subscriptionUrl: "https://docs.google.com/forms/",
+    isOpen: true,
     requirements: [
       "Ser estudante com vínculo ativo em qualquer curso de graduação da UFF.",
       "Disponibilidade mínima de 4 horas semanais para reuniões acadêmicas e trabalhos em equipe.",
@@ -705,6 +883,338 @@ export const INITIAL_CONTENT: SiteContent = {
     email: "lacif.uff@gmail.com",
     address: "Faculdade de Farmácia, Universidade Federal Fluminense, Campus Valonguinho, Niterói, RJ, CEP 24240-000"
   },
-  googleDriveUrl: "https://drive.google.com/drive/folders/1YYeI1Z0A5-XQs0L4jFZtwjTi3juKE1tn?usp=drive_link",
-  libraryDriveUrl: "https://drive.google.com/drive/folders/18Px836g0VtCCV10F-mso68N6HuyNuSfy?usp=sharing"
+  academicModules: [
+    {
+      id: "mod1",
+      tag: "Módulo I",
+      title: "Aulas & Práticas Acadêmicas",
+      description: "Palestras teóricas instrutivas e oficinas semanais focadas em protocolos de vestígios criminais. Nossos ligantes desenvolvem embasamento jurídico e noções profundas de metodologias científicas de toxicologia, química e antropologia legal nos laboratórios da UFF.",
+      skills: ["Doutrina Legal", "Oficinas Teóricas"]
+    },
+    {
+      id: "mod2",
+      tag: "Módulo II",
+      title: "Simulações de Cenas Reais",
+      description: "Treinamentos práticos de preservação de local de infração criminal, isolamentos táticos, busca geométrica de projéteis e vestígios biológicos, revelações de digitais por cianoacrilato em laboratório e confecção metodológica de laudos oficiais.",
+      skills: ["Cadeia de Custódia", "Coleta de Vestígios"]
+    },
+    {
+      id: "mod3",
+      tag: "Módulo III",
+      title: "Integração Multidisciplinar",
+      description: "Sinergia real entre cursos de Farmácia, Biomedicina, Química, Computação e Direito. Capacitamos ligantes a analisar uma mesma evidência sob múltiplos prismas de saberes, unificando a ciência de laboratório ao rito processual penal brasileiro.",
+      skills: ["Diálogo de Áreas", "Estudo Integrado"]
+    }
+  ],
+  academicPillars: [
+    {
+      id: "pil1",
+      title: "Ensino",
+      description: "Aulas, cursos livres de criminologia, palestras com peritos federais oficiais, workshops práticos e capacitações frequentes para os membros ligantes."
+    },
+    {
+      id: "pil2",
+      title: "Pesquisa",
+      description: "Projetos científicos embasados em dados, produção acadêmica de laudos simulados, teses revisórias e acompanhamento de inovações tecnológicas globais de laboratório."
+    }
+  ],
+  escapeRoomConfig: {
+    introText: "Durante uma visita ao Laboratório Central de Ciências Forenses da LACIF UFF, o sistema de segurança eletrônica de biossegurança entrou em alerta crítico e bloqueou todas as saídas integradas. Você ficou preso nas instalações e a única forma de obter as chaves de liberação é usar seu conhecimento em perícia e investigação criminal para resolver os enigmas deixados nas mesas de análise biométrica e técnica.",
+    pointsPerCorrect: 200,
+    pointsPerIncorrect: -50,
+    pointsPerRoom: 500,
+    pointsPerGame: 2000,
+    rooms: [
+      {
+        id: "room-dna",
+        name: "DNA Forense",
+        theme: "Laboratório Genético",
+        challengeTitle: "Cadeia Molecular",
+        challengeDesc: "Um vestígio de sangue foi coletado na maçaneta da porta traseira do laboratório de contenção molecular. Analise o perfil de eletroforese de fragmentos de restrição (marcadores STR) da amostra e compare o alinhamento com o perfil de DNA dos suspeitos sob custódia.",
+        question: "Qual suspeito possui o perfil genético idêntico à amostra biológica colhida na cena?",
+        options: [
+          "Suspeito A: Amostra com STR de 4 e 7 alelos curtos (loci CS1PO)",
+          "Suspeito B: Correspondência homotípica total de bandas no gel",
+          "Suspeito C: Perfil com deleção alélica estrutural incompatível",
+          "Suspeito D: Fração incompatível na banda de peso molecular superior"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "O Suspeito B apresenta exata sobreposição em todas as bandas de alelos moleculares analisados no gel de fluorescência ultravioleta.",
+        optionExplanations: [
+          "Incorreto. O Suspeito A apresenta divergências críticas na frequência alélica dos locos CS1PO, indicando uma origem biológica distinta daquela colhida na cena.",
+          "Correto! O perfil genético STR do Suspeito B corresponde integralmente em todas as bandas com o DNA da amostra por eletroforese em gel.",
+          "Incorreto. O Suspeito C exibe falhas técnicas e deleções que anulam a possibilidade de correspondência genotípica com o sangue da porta.",
+          "Incorreto. O Suspeito D possui bandas divergentes nos locos de peso molecular superior, descartando qualquer compatibilidade biológica."
+        ],
+        curiosity: "O DNA forense foi usado pela primeira vez em 1986 na Inglaterra por Sir Alec Jeffreys, permitindo inocentar um rapaz injustamente acusado e capturar o real culpado."
+      },
+      {
+        id: "room-papilo",
+        name: "Papiloscopia",
+        theme: "Laboratório de Impressões Digitais",
+        challengeTitle: "Busca de Minúcias",
+        challengeDesc: "Uma impressão digital parcial latente foi revelada usando vaporização química de cianoacrilato no frasco coletor. Mapeie as cristas papilares da cena e faça a triagem dactiloscópica.",
+        question: "Qual dos suspeitos apresenta correspondência perfeita de pelo menos 12 pontos característicos?",
+        options: [
+          "Suspeito A: Configuração de dactilograma com 14 pontos de minúcias coincidentes",
+          "Suspeito B: Padrão de arco simples sem delta ou pontos nucleares correspondentes",
+          "Suspeito C: Relevo com cicatriz profunda transversal ausente no objeto da cena",
+          "Suspeito D: Presilha com núcleo de vetor inverso sem pontos homólogos"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "A impressão do Suspeito A exibe perfeita paridade de minúcias coincidentes incluindo a bifurcação central e delta lateral de orientação.",
+        optionExplanations: [
+          "Correto! O Suspeito A possui perfeita concordância em 14 minúcias (bifurcações, ilhas e terminações de crista) cumprindo a exigência legal dactiloscópica de identificação.",
+          "Incorreto. A ausência de delta no arco do Suspeito B diverge totalmente da estrutura em presilha encontrada no fragmento examinado.",
+          "Incorreto. Cicatrizes alteram permanentemente o dactilograma, tornando a amostra do Suspeito C incompatível com o relevo intacto do vestígio.",
+          "Incorreto. A inclinação invertida do núcleo do Suspeito D desqualifica qualquer correlação matemática direta no alinhamento de pontos característicos."
+        ],
+        curiosity: "As impressões digitais se desenvolvem no terceiro mês de gestação intrauterina e são absolutamente únicas para cada indivíduo, inclusive em gêmeos idênticos."
+      },
+      {
+        id: "room-balistica",
+        name: "Balística Forense",
+        theme: "Laboratório de Armas e Munições",
+        challengeTitle: "Raiamento Microscópico",
+        challengeDesc: "Um projétil de arma de fogo foi extraído da parede do laboratório. Sob o microscópio de comparação balística, analise as marcações secundárias e o sentido do raiamento.",
+        question: "Pelas características geométricas (orientação levógira e 6 estrias regulares), qual arma operada efetuou o disparo?",
+        options: [
+          "Pistola semiautomática calibre .380 do Suspeito B",
+          "Revólver calibre .38 Special com percussor de agulha móvel",
+          "Espingarda de cano liso Gauge 12 sem ranhuras de indução",
+          "Carabina de repetição por ferrolho de raiamento dextrógiro"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "A pistola .380 do suspeito B possui alma raiada levógira que imprime estriações idênticas no projétil de chumbo examinado.",
+        optionExplanations: [
+          "Correto! O cano raiado levógiro (à esquerda) da pistola do Suspeito B gera ranhuras com o mesmo ângulo de passo e número de estrias.",
+          "Incorreto. O revólver .38 Special possui raiamento dextrógiro (à direita) com ranhura de profundidade distinta e passo descontínuo.",
+          "Incorreto. Canos de espingarda Gauge 12 são lisos; não geram estrias longitudinais de indução de rotação nos projéteis.",
+          "Incorreto. O raiamento dextrógiro (à direita) inclina as estrias no sentido oposto às marcas encontradas no projétil examinado."
+        ],
+        curiosity: "Não existem duas armas de fogo no mundo que produzam as exatas mesmas ranhuras e marcas em um projétil disparado, agindo como um código pericial único."
+      },
+      {
+        id: "room-quimica",
+        name: "Química Forense",
+        theme: "Laboratório Químico",
+        challengeTitle: "Cromatografia e Reação",
+        challengeDesc: "Uma substância cristalina suspeita foi colhida e submetida a teste colorimétrico preliminar usando reagentes por via úmida. Observe as mudanças de coloração.",
+        question: "De acordo com a viragem de cor em tempo real para azul cobalto e pH alcalino fraco (6.5), qual o diagnóstico químico?",
+        options: [
+          "Cloridrato de Cocaína (Sal Alcaloide)",
+          "Heroína de alta pureza molecular",
+          "Cafeína desidratada inerte",
+          "Açúcar de confeitaria de uso analítico"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "O Reagente de Scott identifica cloridrato de cocaína através da quelação com íons cobalto resultando em coloração azul cobalto.",
+        optionExplanations: [
+          "Correto! O tiocianato de cobalto (reagente de Scott) reage especificamente formando um sal complexo azul cobalto insolúvel.",
+          "Incorreto. A heroína reage produzindo uma coloração púrpura escura com o reagente de Marquis, e não azul sob Scott.",
+          "Incorreto. A cafeína é um adulterante comum mas não promove a viragem de cor azul precipitada neste ensaio.",
+          "Incorreto. Carboidratos simples de açúcar não reagem com o agente cobaltoso e diluem-se sem precipitado azul."
+        ],
+        curiosity: "A química forense é capaz de desvendar fraudes, envenenamentos por arsênio e analisar resíduos invisíveis de pólvora (GSR) nas mãos de atiradores."
+      },
+      {
+        id: "room-document",
+        name: "Documentoscopia",
+        theme: "Laboratório de Documentoscopia",
+        challengeTitle: "Laudo Grafotécnico",
+        challengeDesc: "A credencial restrita apreendida foi submetida a exames no comparador espectral de vídeo. Analise os traços da assinatura e o alinhamento das fontes sob diferentes espectros.",
+        question: "Qual o diagnóstico pericial sobre a veracidade do crachá do suspeito?",
+        options: [
+          "Documento Legítimo: Apenas desgastado por uso mecânico diário",
+          "Documento Fraudulento: Presença de decalque subjacente e papel inerte reativo ao espectro UV"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "O decalque caracterizado por impermanência de velocidade e falta de fluorescência de segurança comprova falsidade material.",
+        optionExplanations: [
+          "Incorreto. O desgaste do crachá não justifica o decalque detectado sob a assinatura nem o comportamento inerte do papel sob luz UV.",
+          "Correto! A análise espectróptica detectou paradas bruscas e marcas de grafite indicando decalque sob a assinatura, além de papel inerte reativo ao espectro UV."
+        ],
+        curiosity: "A documentoscopia forense estuda moedas, cédulas de Real, selos cartorários e usa luzes espectrais com filtros infravermelhos para ler textos rasurados."
+      },
+      {
+        id: "room-entomologia",
+        name: "Entomologia Forense",
+        theme: "Laboratório de Insetos",
+        challengeTitle: "Estimativa de Cronotanatognose",
+        challengeDesc: "Artrópodes e larvas de díptero (mosca) foram recolhidos nos resíduos orgânicos do laboratório. Faça o estudo do estágio de evolução sob temperatura estável de 24°C.",
+        question: "Considerando a presença de pupas de Chrysomya e larvas maduras de terceiro instar migratório, qual o intervalo temporal estimado?",
+        options: [
+          "Intervalo de 24 a 36 horas (Predomínio de ovos recém-postos e larvas de primeiro instar)",
+          "Intervalo de 5 a 6 dias (Desenvolvimento de pupas e larvas no término do terceiro estágio)",
+          "Intervalo de 3 a 4 semanas (Colonização total de coleópteros saprófagos e restos áridos)"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Larvas de terceiro estágio maduro e pupas de califorídeos indicam colonização estabelecida há cerca de 5 a 6 dias naquelas condições climatológicas.",
+        optionExplanations: [
+          "Incorreto. Em apenas 24 a 36 horas não haveria tempo biológico para eclosão de ovos, alimentação laboriosa de instars e pupação.",
+          "Correto! O tempo biológico para dípteros colonizarem, passarem pelos instars 1, 2 e 3 e começarem a pupação sob 24°C é de 5 a 6 dias.",
+          "Incorreto. Com 3 a 4 semanas, os tecidos moles estariam consumidos com predomínio de besouros necrófagos do ciclo tardio por restos secos."
+        ],
+        curiosity: "A entomologia forense calcula com precisão matemática o termo térmico acumulado (ADD) considerando a meteorologia local registrada para fixar o momento exato do óbito."
+      },
+      {
+        id: "room-toxicologia",
+        name: "Toxicologia Forense",
+        theme: "Laboratório de Espectrometria",
+        challengeTitle: "Pesquisa de Veneno",
+        challengeDesc: "A análise de frações de fluidos de um dos monitores indicou depressão drástica da respiração interna celular. Avalie a fragmentação iônica resultante sob ionização eletrônica no espectrômetro.",
+        question: "De acordo com o espectro de massas clássico e o pico característico, qual o agente químico responsável?",
+        options: [
+          "Metal Pesado (Picos correspondentes ao Arsênio)",
+          "Metabólitos farmacológicos de anti-inflamatório em dose terapêutica usual",
+          "Concentração simples de etanol moderado sem interferentes metálicos"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "O pico de massa/carga no espectro confirma a presença de arsênio, inibidor enzimático celular letal causador do óbito.",
+        optionExplanations: [
+          "Correto! O espectro identificou com precisão a assinatura molecular característica e massa atômica de metal pesado tóxico (Arsênio).",
+          "Incorreto. Anti-inflamatórios terapêuticos comuns não exibiriam esse pico nem induziriam ao colapso celular agudo.",
+          "Incorreto. O álcool de uso doméstico comum apresenta quebras de peso molecular leve, sem compatibilidade com este espectro de fragmentação pesada."
+        ],
+        curiosity: "O arsênio compete com o fosfato inorgânico no ciclo do ATP, desativando a produção celular de energia química e acumulando-se nas unhas por afinidade de queratina."
+      },
+      {
+        id: "room-antropologia",
+        name: "Antropologia Forense",
+        theme: "Morgue / Antropologia Física",
+        challengeTitle: "Identidade Esquelética",
+        challengeDesc: "Vestígios esqueléticos foram recolhidos do encanamento central de descarte metálico. Examine o ângulo do osso coxal e o grau de fechamento de junções epifisárias e cranianas.",
+        question: "Considerando uma pelve estreita de ângulo subpúbico menor de 90° e obliteração fibrosa das suturas cranianas sagitais, qual a estimativa do perfil biótico?",
+        options: [
+          "Indivíduo do sexo masculino com estimativa de idade adulta avançada",
+          "Indivíduo do sexo feminino com bacia larga e dentes decíduos infantis",
+          "Indivíduo jovem impúbere com ausência de fusão de metáfises distais"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "O ângulo subpúbico estreito (menor de 90°) define o sexo biológico masculino, enquanto a fusão sutural craniana confirma idade madura.",
+        optionExplanations: [
+          "Correto! A bacia tipicamente estreita de formato androide (menor de 90 graus) combinada à completa calcificação sutural define esqueleto de homem adulto com idade avançada.",
+          "Incorreto. A pelve de esqueleto feminino possui abertura larga de ângulo obtuso (maior de 100°) e dentes infantis contradizem suturas fechadas.",
+          "Incorreto. A consolidação óssea das suturas cranianas e fechos epifisários é incompatível com indivíduos jovens em crescimento."
+        ],
+        curiosity: "As suturas do crânio fundem-se em um padrão cronológico bastante regular ao longo dos anos, agindo como um cronômetro biológico pós-vida."
+      },
+      {
+        id: "room-informatica",
+        name: "Informatica Forense",
+        theme: "Laboratório Cibernético",
+        challengeTitle: "Recuperação de Metadados",
+        challengeDesc: "Um servidor contendo arquivos sigilosos de relatórios periciais foi invadido. Analise a assinatura criptográfica e os metadados EXIF de uma imagem suspeita de ter sido adulterada.",
+        question: "Qual o indício pericial eletrônico irrefutável de adulteração do arquivo de imagem?",
+        options: [
+          "Alteração do valor Hash original (MD5/SHA-256) e quebra de metadados de geolocalização EXIF",
+          "Apenas a alteração simples do nome de exibição do arquivo no sistema operacional",
+          "O arquivo manter o mesmo código de hash criptográfico e data de modificação íntegros"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Uma imagem adulterada muda de valor hash de integridade obrigatoriamente e perde ou altera seus metadados de aquisição.",
+        optionExplanations: [
+          "Correto! A integridade digital é aferida pelo valor HASH. Qualquer alteração microscópica altera o MD5/SHA-256 e os metadados mostram a adulteração.",
+          "Incorreto. Renomear o arquivo é uma alteração simples de sistema de arquivos e não impacta a assinatura criptográfica e bits internos do conteúdo.",
+          "Incorreto. Se o hash e tamanho em bytes mantiverem-se estáveis, o arquivo é certificado como íntegro e não adulterado."
+        ],
+        curiosity: "A computação forense usa funções unidirecionais de hash como SHA-256 para atestar a autenticidade jurídica e garantir a integridade de evidências binárias."
+      },
+      {
+        id: "room-medicina",
+        name: "Medicina Legal",
+        theme: "Sala de Necropsia",
+        challengeTitle: "Fixação de Livores",
+        challengeDesc: "Durante o exame de um corpo encontrado em decúbito dorsal (posição de costas), o perito médico legista identificou manchas de hipóstase fortemente fixadas na face ventral.",
+        question: "O que essa desconformidade posicional de fixação de livores cadavéricos prova?",
+        options: [
+          "Que o óbito ocorreu em menos de duas horas e o coração ainda bombeava fluidos",
+          "Que o corpo foi fisicamente movimentado ou virado de barriga para cima horas após a morte",
+          "Uma típica reação biológica decorrente de óbito por infarto agudo do miocárdio"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "Os livores cadavéricos de hipóstase se fixam permanentemente de 8 a 12 horas após a morte. Se estão do lado oposto à gravidade, o corpo foi rotacionado.",
+        optionExplanations: [
+          "Incorreto. Nos primeiros minutos os livores são completamente móveis e mutáveis, não estariam fixados na face ventral.",
+          "Correto! Os livores depositam-se gravitacionalmente. Se estão na barriga mas o corpo foi achado de costas, isso indica manipulação do corpo após 8-12h da morte.",
+          "Incorreto. Livores são puramente fenômenos físicos circulatórios passivos gravíticos comuns a todas as causas mortis mecânicas."
+        ],
+        curiosity: "O fenômeno do livor mortis e a rigidez cadavérica (rigor mortis) auxiliam no estabelecimento preciso da cronotanatognose (tempo aproximado de morte)."
+      },
+      {
+        id: "room-hematologia",
+        name: "Padrão de Respingos",
+        theme: "Criminalística de Campo",
+        challengeTitle: "Hematologia Reconstrutiva",
+        challengeDesc: "Padrões de respingos de sangue foram encontrados no piso do laboratório. O perito precisa aferir a elipse de impacto e sua direção estática temporal.",
+        question: "Gotas de sangue longas e elípticas apresentando caudas de projeção voltadas para a direita indicam qual dinâmica?",
+        options: [
+          "Impacto em ângulo de 95 graus em velocidade nula vertical pura",
+          "Impacto de sangue em ângulo agudo com projeção oblíqua da esquerda para a direita",
+          "Gotejamento passivo estático sem arraste aerodinâmico visível"
+        ],
+        correctAnswerIndex: 1,
+        explanation: "O formato da elipse indica impacto angular e a cauda direciona a trajetória que o sangue fazia antes do contato.",
+        optionExplanations: [
+          "Incorreto. Ângulos de 90 graus formam respingos circulares perfeitos sem alongamento ou satélites de projeção.",
+          "Correto! O arraste alonga a gota e ejeta uma cauda ou satélite na mesma direção vetorial que aponta para o destino da partícula.",
+          "Incorreto. O gotejamento vertical gera gotas redondas fáceis de analisar de acordo com a altura de queda livre."
+        ],
+        curiosity: "A análise fisionômica das manchas de sangue (BPA) utiliza relações trigonométricas de arcoseno para rastrear a origem tridimensional dos impactos na cena."
+      },
+      {
+        id: "room-odontologia",
+        name: "Odontologia Forense",
+        theme: "Identificação Humana",
+        challengeTitle: "Marcas de Mordida",
+        challengeDesc: "Um alimento com uma mordida profunda do autor do crime foi recolhido na pia do laboratório. O perito efetuará análise comparativa da arcada dentária.",
+        question: "Qual característica odontológica é capaz de individualizar a marca de mordida e apontar seu autor?",
+        options: [
+          "Espaçamento interdentário, dentes desalinhados, anomalias e DNA das células de saliva",
+          "Somente o formato geral do arco maxilar que é comum a toda a população humana",
+          "A contagem simples de dentes molares que não participam da mordida frontal"
+        ],
+        correctAnswerIndex: 0,
+        explanation: "Anomalias de posição de dentes (rotações, dentes encavalados, desgastes) criam padrões exclusivos junto ao material genético salivar.",
+        optionExplanations: [
+          "Correto! Giroversões, diastemas e ausências criam uma 'impressão digital dentária' única, selada pelo perfil genético da saliva deixada no local.",
+          "Incorreto. O formato plano de mandíbula é generalista e não serve para individualização de suspeitos em escala microscópica.",
+          "Incorreto. Os dentes molares ficam no fundo do arco e raramente causam a gravação das marcas frontais em alimentos."
+        ],
+        curiosity: "A arcada dentária e o esmalte dos dentes resistem extraordinariamente a altas temperaturas e decomposição, servindo como poderoso recurso bioidentificador."
+      }
+    ],
+    cases: [
+      {
+        id: "caso-lacif-01",
+        title: "Veredito Criminal Final",
+        story: "Com base em todas as provas técnicas levantadas na sua investigação:\n\n1. O DNA no botão do biométrico traseiro corresponde ao Suspeito B.\n2. O raiamento e estrias do projétil na parede coincidem com o calibre da pistola apreendida com o Suspeito B.\n3. O crachá falso com decalque gráfico de assinaturas era utilizado pelo Suspeito B.\n4. O Suspeito A apenas manuseou o cofre após o evento principal, deixando impressões de contato no topo.\n\nAssocie os vestígios, a autoria material dos laudos e emita seu veredito técnico oficial apontando o real autor que violou o laboratório central:",
+        finalCulpritIndex: 1,
+        culpritOptions: [
+          "Suspeito A - Monitor de Biologia Forense",
+          "Suspeito B - Monitor de Química Avançada",
+          "Suspeito C - Estudante de Farmácia Visitante",
+          "Suspeito D - Técnico Terceirizado de TI"
+        ]
+      }
+    ],
+    achievements: [
+      { id: "ach-1", title: "Primeira Investigação", description: "Completou a primeira sala do laboratório.", icon: "Award" },
+      { id: "ach-2", title: "Analista Forense", description: "Completou 3 salas sem esgotar o tempo.", icon: "Lock" },
+      { id: "ach-3", title: "Especialista Criminal", description: "Concluiu o Escape Room com mais de 5000 pontos.", icon: "Zap" },
+      { id: "ach-4", title: "Mestre da Investigação", description: "Escapou do laboratório sem cometer um único erro.", icon: "Trophy" }
+    ]
+  },
+  escapeRoomRankings: [
+    { name: 'Dr. Leonardo (Perito Geral)', score: 9500, time: '04:12', date: '30/05/2026', classification: 'Mestre das Ciências Forenses' },
+    { name: 'Ana Bianca (LACiF UFF)', score: 8800, time: '05:45', date: '30/05/2026', classification: 'Perito Criminal' },
+    { name: 'Maryana Oliveira', score: 7200, time: '07:18', date: '29/05/2026', classification: 'Perito Criminal' },
+    { name: 'Marco Oliveira', score: 6500, time: '08:30', date: '29/05/2026', classification: 'Perito Júnior' }
+  ],
+  quizRankings: [
+    { name: 'Dr. Leonardo (Perito Geral)', score: 10, totalQuestions: 10, date: '30/05/2026', classification: 'Perito Geral Sênior' },
+    { name: 'Ana Bianca (LACiF UFF)', score: 9, totalQuestions: 10, date: '30/05/2026', classification: 'Perito Adjunto' },
+    { name: 'Maryana Oliveira', score: 9, totalQuestions: 10, date: '29/05/2026', classification: 'Perito Adjunto' },
+    { name: 'Alexandre Santos', score: 8, totalQuestions: 10, date: '28/05/2026', classification: 'Perito Assistente' }
+  ]
 };

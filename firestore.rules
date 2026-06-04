@@ -8,5 +8,17 @@ service cloud.firestore {
     match /config/{configId} {
       allow read, write: if true;
     }
+
+    // Secure Quiz Results subcollection implementing Attribute-Based Access Control
+    match /quiz_results/{resultId} {
+      // Allow creation if user is signed in and claims the write with their matching authorized UID
+      allow create: if request.auth != null && request.resource.data.uid == request.auth.uid;
+      
+      // Allow reading list/documents only for the corresponding logged-in owner
+      allow read: if request.auth != null && resource.data.uid == request.auth.uid;
+      
+      // Updates and deletions are barred to ensure zero-trust compliance on academic exams
+      allow update, delete: if false;
+    }
   }
 }

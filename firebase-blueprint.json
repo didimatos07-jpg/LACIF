@@ -2,7 +2,7 @@
   "entities": {
     "siteConfig": {
       "title": "Site Configuration",
-      "description": "Dynamic and persistent content representing all editable sections of LACIF UFF, including directories, registries, links, specialties, and FAQs.",
+      "description": "Dynamic and persistent content representing all editable sections of LACiF UFF, including directories, registries, links, specialties, and FAQs.",
       "type": "object",
       "properties": {
         "contentJson": {
@@ -20,12 +20,53 @@
         }
       },
       "required": ["contentJson", "updatedAt"]
+    },
+    "quizResults": {
+      "title": "Quiz Result",
+      "description": "Submitted exam results representing active simulated tests taken by authenticated candidates or peritos.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "User UID of the researcher in Firebase Auth"
+        },
+        "email": {
+          "type": "string",
+          "description": "E-mail address of the authenticated perito"
+        },
+        "displayName": {
+          "type": "string",
+          "description": "Display name or identification code given during registration"
+        },
+        "score": {
+          "type": "integer",
+          "description": "Amount of correct answers"
+        },
+        "totalQuestions": {
+          "type": "integer",
+          "description": "Total count of question simulations"
+        },
+        "accuracy": {
+          "type": "integer",
+          "description": "Safety margin accuracy score (percentage)"
+        },
+        "submittedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Execution timestamp"
+        }
+      },
+      "required": ["uid", "email", "score", "totalQuestions", "submittedAt"]
     }
   },
   "firestore": {
     "/config/{configId}": {
       "schema": "siteConfig",
-      "description": "Root configuration document containing the live state of LACIF UFF shared with all public visitors and administrators."
+      "description": "Root configuration document containing the live state of LACiF UFF shared with all public visitors and administrators."
+    },
+    "/quiz_results/{resultId}": {
+      "schema": "quizResults",
+      "description": "Exams history collection storing academic diagnostics taken by active practitioners."
     }
   }
 }

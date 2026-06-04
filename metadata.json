@@ -1,5 +1,5 @@
 {
-  "name": "LACIF UFF",
+  "name": "LACiF UFF",
   "description": "Liga Acadêmica de Ciências Forenses da Universidade Federal Fluminense. Plataforma de investigação, ensino, pesquisa e extensão.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]

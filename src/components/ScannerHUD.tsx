@@ -112,7 +112,7 @@ export default function ScannerHUD() {
 
       <div className="flex justify-between text-[10px] font-mono text-gray-500 mt-2">
         <span className="flex items-center gap-1"><Shield className="h-3 w-3" /> Criptografia Vucetich</span>
-        <span className="flex items-center gap-1"><Cpu className="h-3 w-3" /> LACIF AI-Core</span>
+        <span className="flex items-center gap-1"><Cpu className="h-3 w-3" /> LACiF AI-Core</span>
       </div>
     </div>
   );

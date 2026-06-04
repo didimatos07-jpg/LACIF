@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { FolderOpen, ExternalLink, ShieldAlert, BookOpen, Layers, Search, FileText, Link as LinkIcon, BookOpenCheck } from 'lucide-react';
+import React from 'react';
+import { FolderOpen, ExternalLink, ShieldAlert, BookOpen, Layers } from 'lucide-react';
 import { LibraryItem } from '../types.ts';
 
 interface LibraryProps {
@@ -11,21 +11,8 @@ export default function Library({ items = [], libraryDriveUrl }: LibraryProps) {
   const defaultUrl = "https://drive.google.com/drive/folders/18Px836g0VtCCV10F-mso68N6HuyNuSfy?usp=sharing";
   const finalUrl = libraryDriveUrl || defaultUrl;
 
-  const [searchTerm, setSearchTerm] = useState('');
-  const [activeCategory, setActiveCategory] = useState<string>('All');
-
-  const categories = ['All', 'Livro', 'Artigo', 'Documentário', 'Técnica', 'PDF', 'Protocolo', 'Estudo de Caso'];
-
-  const filteredItems = items.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          item.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                          item.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = activeCategory === 'All' || item.category === activeCategory;
-    return matchesSearch && matchesCategory;
-  });
-
   return (
-    <div className="w-full max-w-6xl mx-auto text-white space-y-12">
+    <div className="w-full max-w-6xl mx-auto text-white">
       <div className="rounded-3xl p-8 md:p-12 glassmorphism border border-yellow-400/20 relative overflow-hidden shadow-2xl space-y-8">
         
         {/* Abstract forensic/security grid backing */}
@@ -49,7 +36,7 @@ export default function Library({ items = [], libraryDriveUrl }: LibraryProps) {
             
             <div className="space-y-1">
               <span className="text-[10px] font-mono text-gray-400 font-bold block leading-none">BIBLIOTECA</span>
-              <span className="text-[8px] font-mono text-gray-600 block tracking-widest leading-none uppercase">LACIF DIGITAL</span>
+              <span className="text-[8px] font-mono text-gray-600 block tracking-widest leading-none uppercase">LACiF DIGITAL</span>
             </div>
           </div>
 
@@ -106,106 +93,6 @@ export default function Library({ items = [], libraryDriveUrl }: LibraryProps) {
         </div>
 
       </div>
-
-      {/* DYNAMIC CATALOGUE GRID SECTION */}
-      <div className="space-y-6">
-        <div className="flex flex-col md:flex-row gap-4 justify-between items-center bg-zinc-950/40 p-4 rounded-2xl border border-white/5">
-          {/* Search Box */}
-          <div className="relative w-full md:w-80">
-            <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-500">
-              <Search className="h-4 w-4" />
-            </span>
-            <input 
-              type="text"
-              placeholder="Pesquisar nos registros..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-9 pr-4 py-2 bg-black/60 border border-white/10 rounded-xl text-xs text-white placeholder-gray-500 focus:outline-none focus:border-yellow-400 transition-colors"
-              id="search-library-records"
-            />
-          </div>
-
-          {/* Categories list slider/wrapper */}
-          <div className="flex gap-1.5 overflow-x-auto max-w-full pb-1 md:pb-0 scrollbar-none">
-            {categories.map(cat => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-3 py-1.5 text-[10px] font-mono rounded-lg border uppercase shrink-0 transition-all cursor-pointer ${
-                  activeCategory === cat 
-                    ? 'bg-yellow-400 text-black font-bold border-yellow-400' 
-                    : 'bg-black/40 text-gray-400 border-white/10 hover:border-white/20 hover:text-white'
-                }`}
-              >
-                {cat === 'All' ? 'Ver Todos' : cat}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Dynamic Cards Grid */}
-        {filteredItems.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filteredItems.map(item => (
-              <div 
-                key={item.id}
-                className="group relative rounded-2xl p-5 bg-zinc-900/60 border border-white/10 hover:border-yellow-400/40 hover:shadow-[0_0_20px_rgba(255,208,0,0.05)] transition-all flex flex-col justify-between overflow-hidden"
-              >
-                {/* Visual side accent */}
-                <div className="absolute top-0 right-0 w-24 h-24 bg-yellow-400/5 rounded-bl-full pointer-events-none transition-opacity group-hover:opacity-20" />
-                
-                <div className="space-y-3">
-                  <div className="flex justify-between items-start gap-2">
-                    <span className="text-[9px] font-mono text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded uppercase font-bold shrink-0">
-                      {item.category}
-                    </span>
-                    {item.fileSize && (
-                      <span className="text-[9px] font-mono text-gray-500">
-                        {item.fileSize}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="space-y-1">
-                    <h5 className="font-display font-extrabold text-sm text-white group-hover:text-yellow-400 transition-colors line-clamp-2">
-                      {item.title}
-                    </h5>
-                    <p className="text-[10px] font-mono text-gray-500">
-                      por <span className="text-gray-400">{item.author}</span>
-                    </p>
-                  </div>
-
-                  <p className="text-xs text-gray-400 font-sans leading-relaxed line-clamp-3">
-                    {item.description}
-                  </p>
-                </div>
-
-                <div className="mt-5 pt-4 border-t border-white/5 flex items-center justify-between">
-                  <span className="text-[9px] font-mono text-gray-500 uppercase">
-                    {item.fileType === 'pdf' ? '📄 Documento PDF' : item.fileType === 'image' ? '🖼️ Arquivo de Imagem' : '🔗 Link do Recurso'}
-                  </span>
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 text-[10px] font-mono text-yellow-500 hover:text-yellow-400 transition-colors"
-                  >
-                    <span>Acessar</span>
-                    <ExternalLink className="h-3.5 w-3.5" />
-                  </a>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="text-center py-16 rounded-2xl border border-dashed border-white/10 bg-zinc-900/20">
-            <BookOpenCheck className="h-12 w-12 text-gray-600 mx-auto mb-3" />
-            <h5 className="font-mono text-xs text-gray-400 uppercase">Nenhum registro catalogado encontrado</h5>
-            <p className="text-[11px] text-gray-500 font-sans mt-1">Refine o filtro de categoria ou termo de busca.</p>
-          </div>
-        )}
-      </div>
-
     </div>
   );
 }

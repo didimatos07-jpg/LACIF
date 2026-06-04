@@ -12,6 +12,8 @@ import {
   MapPin, 
   Instagram, 
   Youtube, 
+  Facebook,
+  Twitter,
   Compass, 
   Trophy, 
   Sparkles, 
@@ -37,82 +39,180 @@ import Header from './components/Header.tsx';
 import ScannerHUD from './components/ScannerHUD.tsx';
 import VocationalTest from './components/VocationalTest.tsx';
 import ForensicQuiz from './components/ForensicQuiz.tsx';
+import ForensicEscapeRoom from './components/ForensicEscapeRoom.tsx';
 import Library from './components/Library.tsx';
 import Gallery from './components/Gallery.tsx';
 import AdminPanel from './components/AdminPanel.tsx';
 import PoliceTape from './components/PoliceTape.tsx';
 import AmbientPoliceLights from './components/AmbientPoliceLights.tsx';
 
-// Real-time dynamic Firestore persistence integration
-import { db, isFirebaseEnabled, handleFirestoreError, OperationType } from './lib/firebase.ts';
-import { doc, onSnapshot, setDoc } from 'firebase/firestore';
+// Real-time dynamic Supabase persistence integration
+import { isSupabaseEnabled, supabase, logOut } from './lib/supabase.ts';
+import AuthModal from './components/AuthModal.tsx';
 
 export default function App() {
   const [content, setContent] = useState<SiteContent>(INITIAL_CONTENT);
+  const [dbStatus, setDbStatus] = useState<'connecting' | 'connected' | 'offline'>('connecting');
   const [activeSection, setActiveSection] = useState('inicio');
   const [showAdmin, setShowAdmin] = useState(false);
+  const [currentUser, setCurrentUser] = useState<any | null>(null);
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+
+  // Listen for user authentication state changes
+  useEffect(() => {
+    if (isSupabaseEnabled && supabase) {
+      // Get initial user state
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session?.user) {
+          const u = session.user;
+          setCurrentUser({
+            uid: u.id,
+            email: u.email || '',
+            displayName: u.user_metadata?.display_name || u.user_metadata?.displayName || u.email?.split('@')[0] || 'Agente'
+          });
+        } else {
+          setCurrentUser(null);
+        }
+      });
+
+      // Track active session changes
+      const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+        if (session?.user) {
+          const u = session.user;
+          setCurrentUser({
+            uid: u.id,
+            email: u.email || '',
+            displayName: u.user_metadata?.display_name || u.user_metadata?.displayName || u.email?.split('@')[0] || 'Agente'
+          });
+        } else {
+          setCurrentUser(null);
+        }
+      });
+
+      return () => {
+        subscription.unsubscribe();
+      };
+    }
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      await logOut();
+      console.log("User logged out successfully");
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
   const [activeFaq, setActiveFaq] = useState<string | null>(null);
   const [selectedSpecialty, setSelectedSpecialty] = useState<ForensicSpecialty | null>(null);
   const [activeMapStage, setActiveMapStage] = useState<'preservacao' | 'fixacao' | 'coleta' | 'analise'>('preservacao');
   const [activeActivityTab, setActiveActivityTab] = useState<'all' | 'simulado' | 'workshop' | 'seminario'>('all');
 
-  // Load and cache State seamlessly via Firebase real-time onSnapshot or local fallback
+  // Load and cache State seamlessly via Supabase real-time or local fallback
   useEffect(() => {
-    let unsubscribe: () => void = () => {};
+    let channel: any = null;
 
-    if (isFirebaseEnabled && db) {
-      const configDocRef = doc(db, 'config', 'lacif');
+    if (isSupabaseEnabled && supabase) {
+      setDbStatus('connecting');
       
-      unsubscribe = onSnapshot(configDocRef, (docSnap) => {
-        if (docSnap.exists()) {
-          const data = docSnap.data();
-          if (data && data.contentJson) {
-            try {
-              const parsed = JSON.parse(data.contentJson);
-              setContent(parsed);
-              console.log("Central site content synchronized successfully from Cloud Firestore!");
-            } catch (err) {
-              console.error("Failed to parse centralized cloud config JSON:", err);
+      const loadConfig = async () => {
+        try {
+          const { data, error } = await supabase
+            .from('lacif_config')
+            .select('*')
+            .eq('id', 'lacif')
+            .single();
+
+          if (error) {
+            if (error.code === 'PGRST116') {
+              // Row does not exist yet. Seed default config!
+              console.log("Central cloud row 'lacif_config/lacif' does not exist yet. Seeding...");
+              const cached = SafeStorage.getItem('lacif_site_content_2026');
+              let seedContent: SiteContent = INITIAL_CONTENT;
+              if (cached) {
+                try {
+                  seedContent = JSON.parse(cached);
+                } catch (e) {
+                  console.error("Local cached payload parse error:", e);
+                }
+              }
+
+              setContent(seedContent);
+              setDbStatus('connected');
+
+              // Write row to Supabase
+              await supabase.from('lacif_config').insert({
+                id: 'lacif',
+                content_json: seedContent,
+                updated_at: new Date().toISOString(),
+                updated_by: "System-Auto-Seed"
+              });
+              console.log("Successfully seeded default central config/lacif in Supabase!");
+            } else {
+              throw error;
             }
+          } else if (data && data.content_json) {
+            const parsed = data.content_json;
+            // Guard formats
+            if (!parsed.academicModules) parsed.academicModules = INITIAL_CONTENT.academicModules;
+            if (!parsed.academicPillars) parsed.academicPillars = INITIAL_CONTENT.academicPillars;
+            if (!parsed.specialties || parsed.specialties.length < 13) parsed.specialties = INITIAL_CONTENT.specialties;
+            if (!parsed.vocationalQuestions || parsed.vocationalQuestions.length < 13) parsed.vocationalQuestions = INITIAL_CONTENT.vocationalQuestions;
+            if (!parsed.vocationalResults || Object.keys(parsed.vocationalResults).length < 13) parsed.vocationalResults = INITIAL_CONTENT.vocationalResults;
+
+            setContent(parsed);
+            console.log("Central site content synchronized successfully from Supabase!");
+            setDbStatus('connected');
           }
-        } else {
-          // Document does not exist in Cloud yet. Fallback to local storage or defaults. Do not seed as non-auth visitor.
-          console.log("Central cloud document 'config/lacif' does not exist yet. Using local cache.");
-          const cached = SafeStorage.getItem('lacif_site_content_2026');
-          if (cached) {
-            try {
-              setContent(JSON.parse(cached));
-            } catch (err) {
-              console.error("Failed to parse local cached content on missing cloud doc:", err);
-            }
-          }
+        } catch (error) {
+          console.warn("[LACiF SUPABASE PUBLIC READ FALLBACK]: Config load error. Using local storage.", error);
+          setDbStatus('offline');
+          loadLocalFallback();
         }
-      }, (error) => {
-        console.warn("[LACIF FIREBASE PUBLIC READ FALLBACK]: Config load error (likely permissions/rules syncing or offline). Using local storage fallback.", error);
-        const cached = SafeStorage.getItem('lacif_site_content_2026');
-        if (cached) {
-          try {
-            setContent(JSON.parse(cached));
-          } catch (err) {
-            console.error("Failed to parse cached local storage content:", err);
+      };
+
+      loadConfig();
+
+      // Subscribe to real-time updates of config row
+      channel = supabase
+        .channel('lacif_config_changes')
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'lacif_config', filter: 'id=eq.lacif' }, (payload: any) => {
+          if (payload.new && payload.new.content_json) {
+            console.log("Real-time PostgreSQL content update received:", payload.new);
+            const parsed = payload.new.content_json;
+            if (!parsed.academicModules) parsed.academicModules = INITIAL_CONTENT.academicModules;
+            if (!parsed.academicPillars) parsed.academicPillars = INITIAL_CONTENT.academicPillars;
+            if (!parsed.specialties || parsed.specialties.length < 13) parsed.specialties = INITIAL_CONTENT.specialties;
+            setContent(parsed);
           }
-        }
-      });
+        })
+        .subscribe();
     } else {
+      setDbStatus('offline');
+      loadLocalFallback();
+    }
+
+    function loadLocalFallback() {
       const cached = SafeStorage.getItem('lacif_site_content_2026');
       if (cached) {
         try {
-          setContent(JSON.parse(cached));
+          const parsed = JSON.parse(cached);
+          if (!parsed.academicModules) parsed.academicModules = INITIAL_CONTENT.academicModules;
+          if (!parsed.academicPillars) parsed.academicPillars = INITIAL_CONTENT.academicPillars;
+          if (!parsed.specialties || parsed.specialties.length < 13) parsed.specialties = INITIAL_CONTENT.specialties;
+          if (!parsed.vocationalQuestions || parsed.vocationalQuestions.length < 13) parsed.vocationalQuestions = INITIAL_CONTENT.vocationalQuestions;
+          if (!parsed.vocationalResults || Object.keys(parsed.vocationalResults).length < 13) parsed.vocationalResults = INITIAL_CONTENT.vocationalResults;
+          setContent(parsed);
         } catch (err) {
-          console.error("Erro de leitura do banco de custódia local, restaurando padrões.", err);
+          console.error("Failed to parse cached local storage content:", err);
         }
       }
     }
 
-    // Access Monitor: Track page loads and visitors
+    // Access metrics
     try {
       const viewsVal = SafeStorage.getItem('lacif_total_views');
-      let views = viewsVal ? parseInt(viewsVal, 10) : 312; // Prefilled with realistic premium defaults if first run
+      let views = viewsVal ? parseInt(viewsVal, 10) : 312;
       SafeStorage.setItem('lacif_total_views', (views + 1).toString());
 
       const uniqueVal = SafeStorage.getItem('lacif_unique_visitors');
@@ -145,11 +245,13 @@ export default function App() {
       stats['inicio'] = (stats['inicio'] || 0) + 1;
       SafeStorage.setItem('lacif_section_access_stats', JSON.stringify(stats));
     } catch (e) {
-      console.error("Erro ao rastrear visualização de página:", e);
+      console.error("Error tracking view stats:", e);
     }
 
     return () => {
-      unsubscribe();
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
     };
   }, []);
 
@@ -157,17 +259,17 @@ export default function App() {
     setContent(updated);
     SafeStorage.setItem('lacif_site_content_2026', JSON.stringify(updated));
 
-    if (isFirebaseEnabled && db) {
+    if (isSupabaseEnabled && supabase) {
       try {
-        const configDocRef = doc(db, 'config', 'lacif');
-        await setDoc(configDocRef, {
-          contentJson: JSON.stringify(updated),
-          updatedAt: new Date().toISOString(),
-          updatedBy: "Admin"
-        });
-        console.log("Registry changes successfully saved and broadcast via Cloud Firestore!");
+        await supabase.from('lacif_config').upsert({
+          id: 'lacif',
+          content_json: updated,
+          updated_at: new Date().toISOString(),
+          updated_by: "Admin"
+        }, { onConflict: 'id' });
+        console.log("Registry changes successfully saved and broadcast via Supabase!");
       } catch (err) {
-        handleFirestoreError(err, OperationType.WRITE, 'config/lacif');
+        console.error("Error saving updated content to Supabase:", err);
       }
     }
   };
@@ -176,17 +278,17 @@ export default function App() {
     setContent(INITIAL_CONTENT);
     SafeStorage.removeItem('lacif_site_content_2026');
 
-    if (isFirebaseEnabled && db) {
+    if (isSupabaseEnabled && supabase) {
       try {
-        const configDocRef = doc(db, 'config', 'lacif');
-        await setDoc(configDocRef, {
-          contentJson: JSON.stringify(INITIAL_CONTENT),
-          updatedAt: new Date().toISOString(),
-          updatedBy: "Admin-Reset"
-        });
-        console.log("Central cloud database reset to baseline defaults.");
+        await supabase.from('lacif_config').upsert({
+          id: 'lacif',
+          content_json: INITIAL_CONTENT,
+          updated_at: new Date().toISOString(),
+          updated_by: "Admin-Reset"
+        }, { onConflict: 'id' });
+        console.log("Central Supabase row reset to defaults.");
       } catch (err) {
-        handleFirestoreError(err, OperationType.WRITE, 'config/lacif');
+        console.error("Error resetting content in Supabase:", err);
       }
     }
   };
@@ -244,6 +346,14 @@ export default function App() {
         onAdminClick={() => setShowAdmin(true)} 
         activeSection={activeSection} 
         onNavigate={handleNavigate} 
+        currentUser={currentUser}
+        onAuthClick={() => setIsAuthModalOpen(true)}
+        onLogoutClick={handleLogout}
+      />
+
+      <AuthModal 
+        isOpen={isAuthModalOpen} 
+        onClose={() => setIsAuthModalOpen(false)} 
       />
 
       <main className="flex-1 relative z-10">
@@ -273,7 +383,7 @@ export default function App() {
               </p>
 
               <p className="text-gray-400 text-sm md:text-base max-w-2xl mx-auto lg:mx-0 leading-relaxed font-sans">
-                Seja bem-vindo ao portal oficial da <span className="text-white font-medium">LACIF UFF</span>. Unimos acadêmicos de farmácia, biologia, química, direito e computação na busca por respostas absolutas através do rigor metodológico criminal.
+                Seja bem-vindo ao portal oficial da <span className="text-white font-medium">LACiF UFF</span>. Unimos acadêmicos de farmácia, biologia, química, direito e computação na busca por respostas absolutas através do rigor metodológico criminal.
               </p>
 
               {/* Grid actions buttons */}
@@ -398,7 +508,7 @@ export default function App() {
               <div className="relative rounded-2xl overflow-hidden border border-white/10 z-10 shadow-2xl">
                 <img 
                   src={content.historyImage || null} 
-                  alt="Time LACIF UFF" 
+                  alt="Time LACiF UFF" 
                   className="w-full h-[450px] object-cover group-hover:scale-105 transition-transform duration-500"
                   referrerPolicy="no-referrer"
                 />
@@ -424,18 +534,37 @@ export default function App() {
                   <p key={idx}>{paragraph}</p>
                 ))}
               </div>
+            </div>
 
-              {/* Decorative Simulation Stats */}
-              <div className="grid grid-cols-2 gap-4 max-w-sm pt-4 border-t border-white/5 font-mono">
-                <div className="bg-white/5 backdrop-blur-md p-3 rounded-xl border border-white/10 text-center sm:text-left">
-                  <span className="text-[10px] text-gray-500 block uppercase">Aulas e Práticas</span>
-                  <span className="text-lg font-bold text-white">Simulações Ativas</span>
-                </div>
-                <div className="bg-white/5 backdrop-blur-md p-3 rounded-xl border border-white/10 text-center sm:text-left">
-                  <span className="text-[10px] text-gray-500 block uppercase">Integração</span>
-                  <span className="text-lg font-bold text-yellow-400">Multidisciplinar</span>
-                </div>
-              </div>
+            {/* Metodologias e Vivência Prática LACiF */}
+            <div className="lg:col-span-12 mt-12 grid grid-cols-1 md:grid-cols-3 gap-6 pt-10 border-t border-white/5">
+              {(content.academicModules || []).map((mod, idx) => {
+                const IconComponent = idx === 1 ? Fingerprint : idx === 2 ? Compass : BookOpen;
+                const hoverBorder = idx === 0 ? "hover:border-blue-500/30" : idx === 1 ? "hover:border-yellow-400/30" : "hover:border-blue-400/30";
+                const bgIcon = idx === 0 ? "bg-blue-950/50 border-blue-500/20 text-blue-400" : idx === 1 ? "bg-yellow-400/10 border-yellow-400/20 text-yellow-400" : "bg-blue-900/20 border-blue-400/25 text-blue-400";
+                const tagColor = idx === 0 ? "group-hover:text-blue-400" : idx === 1 ? "group-hover:text-yellow-400" : "group-hover:text-blue-300";
+                return (
+                  <div key={mod.id || idx} className={`relative group bg-zinc-900/40 p-6 rounded-2xl border border-white/5 transition-all duration-300 ${hoverBorder}`}>
+                    <div className={`absolute top-3 right-4 font-mono text-[9px] text-zinc-600 transition-colors tracking-widest uppercase ${tagColor}`}>
+                      {mod.tag || `Módulo ${idx + 1}`}
+                    </div>
+                    <div className={`h-10 w-10 rounded-xl border flex items-center justify-center mb-4 group-hover:scale-105 transition-transform ${bgIcon}`}>
+                      <IconComponent className="h-5 w-5" />
+                    </div>
+                    <h4 className="font-display font-bold text-white text-base">
+                      {mod.title}
+                    </h4>
+                    <p className="text-xs text-gray-400 mt-2 leading-relaxed font-sans">
+                      {mod.description}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-1.5">
+                      {(mod.skills || []).map((skill, sIdx) => (
+                        <span key={sIdx} className="text-[9px] font-mono bg-white/5 px-2 py-0.5 rounded text-gray-400">{skill}</span>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
             </div>
 
           </div>
@@ -456,40 +585,23 @@ export default function App() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              
-              {/* Pillar 1: Ensino */}
-              <div className="p-8 rounded-2xl glassmorphism border border-blue-500/15 hover:border-yellow-400/40 hover:shadow-[0_0_20px_rgba(255,208,0,0.05)] transition-all duration-300 text-center space-y-3">
-                <div className="h-12 w-12 rounded-xl bg-blue-950 border border-blue-500/30 flex items-center justify-center mx-auto mb-4 text-blue-400">
-                  <Award className="h-6 w-6 animate-pulse-glow" />
-                </div>
-                <h4 className="font-display font-bold text-white text-lg uppercase tracking-wider">Ensino</h4>
-                <p className="text-xs text-gray-400 leading-relaxed font-mono">
-                  Aulas, cursos livres de criminologia, palestras com peritos federais oficiais, workshops práticos e capacitações frequentes para os membros ligantes.
-                </p>
-              </div>
-
-              {/* Pillar 2: Pesquisa */}
-              <div className="p-8 rounded-2xl glassmorphism border border-blue-500/15 hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(0,123,255,0.05)] transition-all duration-300 text-center space-y-3">
-                <div className="h-12 w-12 rounded-xl bg-blue-950 border border-blue-500/30 flex items-center justify-center mx-auto mb-4 text-yellow-400">
-                  <Fingerprint className="h-6 w-6 animate-pulse" />
-                </div>
-                <h4 className="font-display font-bold text-white text-lg uppercase tracking-wider">Pesquisa</h4>
-                <p className="text-xs text-gray-400 leading-relaxed font-mono">
-                  Projetos científicos embasados em dados, produção acadêmica de laudos simulados, teses revisórias e acompanhamento de inovações tecnológicas globais de laboratórios forenses.
-                </p>
-              </div>
-
-              {/* Pillar 3: Extensão */}
-              <div className="p-8 rounded-2xl glassmorphism border border-blue-500/15 hover:border-yellow-400/40 hover:shadow-[0_0_20px_rgba(255,208,0,0.05)] transition-all duration-300 text-center space-y-3">
-                <div className="h-12 w-12 rounded-xl bg-blue-950 border border-blue-500/30 flex items-center justify-center mx-auto mb-4 text-blue-400">
-                  <BookOpen className="h-6 w-6" />
-                </div>
-                <h4 className="font-display font-bold text-white text-lg uppercase tracking-wider">Extensão</h4>
-                <p className="text-xs text-gray-400 leading-relaxed font-mono">
-                  Divulgação científica democratizada para o público geral, feiras de biologia molecular e integração participativa com a sociedade do Rio de Janeiro.
-                </p>
-              </div>
-
+              {(content.academicPillars || []).map((pil, idx) => {
+                const IconComponent = idx === 0 ? Award : idx === 1 ? Fingerprint : BookOpen;
+                const hoverBorder = idx === 0 ? "hover:border-yellow-400/40 hover:shadow-[0_0_20px_rgba(255,208,0,0.05)]" : idx === 1 ? "hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(0,123,255,0.05)]" : "hover:border-yellow-400/40 hover:shadow-[0_0_20px_rgba(255,208,0,0.05)]";
+                const iconColor = idx === 1 ? "text-yellow-400" : "text-blue-400";
+                const glowClass = idx === 0 ? "animate-pulse-glow" : idx === 1 ? "animate-pulse" : "";
+                return (
+                  <div key={pil.id || idx} className={`p-8 rounded-2xl glassmorphism border border-blue-500/15 transition-all duration-300 text-center space-y-3 ${hoverBorder}`}>
+                    <div className="h-12 w-12 rounded-xl bg-blue-950 border border-blue-500/30 flex items-center justify-center mx-auto mb-4 text-blue-400">
+                      <IconComponent className={`h-6 w-6 ${iconColor} ${glowClass}`} />
+                    </div>
+                    <h4 className="font-display font-bold text-white text-lg uppercase tracking-wider">{pil.title}</h4>
+                    <p className="text-xs text-gray-400 leading-relaxed font-mono">
+                      {pil.description}
+                    </p>
+                  </div>
+                );
+              })}
             </div>
 
           </div>
@@ -703,7 +815,7 @@ export default function App() {
               </div>
 
               <div className="mt-8 flex justify-between items-center text-[9px] font-mono text-gray-600 pt-4 border-t border-white/5">
-                <span>ESTA ÁREA COMPÕE O EDITAL DE ADMISSÃO DA LACIF UFF</span>
+                <span>ESTA ÁREA COMPÕE O EDITAL DE ADMISSÃO DA LACiF UFF</span>
                 <span>ID: {selectedSpecialty.id.toUpperCase()}</span>
               </div>
             </div>
@@ -757,6 +869,35 @@ export default function App() {
             <ForensicQuiz 
               questions={content.quizQuestions} 
               externalQuizzes={content.externalQuizzes} 
+              content={content}
+              onUpdateContent={handleUpdateContent}
+              currentUser={currentUser}
+            />
+
+          </div>
+        </section>
+
+
+        {/* ================= ESCAPE ROOM FORENSE ================= */}
+        <section id="escape-room" className="py-20 px-4 md:px-8 border-b border-blue-500/10">
+          <div className="max-w-7xl mx-auto space-y-12">
+            
+            <div className="text-center max-w-2xl mx-auto space-y-3">
+              <div className="inline-block bg-yellow-400/15 border border-yellow-400/25 px-3 py-1 rounded text-[#FFD000] font-mono text-[10px] uppercase tracking-widest">
+                DESAFIO DE ESCAPE INTERATIVO
+              </div>
+              <h3 className="font-display font-black text-3xl md:text-5xl text-white uppercase tracking-tight">
+                Escape Room Forense
+              </h3>
+              <p className="text-gray-400 text-sm md:text-base leading-relaxed">
+                Você assume o papel de um estudante de Ciências Forenses que ficou preso em um laboratório de alta segurança da Polícia Científica e precisa resolver desafios periciais para conseguir sair.
+              </p>
+            </div>
+
+            {/* Mount ForensicEscapeRoom core */}
+            <ForensicEscapeRoom 
+              content={content} 
+              onUpdateContent={handleUpdateContent} 
             />
 
           </div>
@@ -772,7 +913,7 @@ export default function App() {
                 ACERVO DIGITAL DE CUSTÓDIA
               </div>
               <h3 className="font-display font-extrabold text-3xl md:text-5xl text-white">
-                Biblioteca Criminológica LACIF UFF
+                Biblioteca Criminológica LACiF UFF
               </h3>
               <p className="text-gray-400 text-sm md:text-base leading-relaxed font-sans">
                 Acesse livros acadêmicos, laudos simulados de referência, manuais técnicos de custódia e periódicos indicados pelos coordenadores da Liga.
@@ -798,7 +939,7 @@ export default function App() {
                 MURAL DE FOTOS E REGISTROS
               </div>
               <h3 className="font-display font-extrabold text-3xl md:text-5xl text-white">
-                Galerias da LACIF
+                Galerias da LACiF
               </h3>
             </div>
 
@@ -873,8 +1014,24 @@ export default function App() {
                 <Sparkles className="h-4 w-4 text-yellow-400 animate-pulse" /> ADMISSÃO & INGRESSO
               </div>
               <h3 className="font-display font-extrabold text-4xl md:text-6xl text-white tracking-tight">
-                Processo Seletivo LACIF UFF
+                Processo Seletivo LACiF UFF
               </h3>
+              
+              {/* INDICADOR VISUAL DO STATUS DAS INSCRIÇÕES */}
+              <div className="flex justify-center pt-1 pb-2">
+                {content.selectiveProcess.isOpen !== false ? (
+                  <div className="inline-flex items-center gap-2 bg-emerald-500/10 border border-emerald-500/30 px-4 py-1.5 rounded-full text-emerald-400 font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(16,185,129,0.15)] select-none">
+                    <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                    Inscrições Abertas
+                  </div>
+                ) : (
+                  <div className="inline-flex items-center gap-2 bg-rose-500/10 border border-rose-500/30 px-4 py-1.5 rounded-full text-rose-400 font-mono text-xs font-bold uppercase tracking-wider shadow-[0_0_15px_rgba(244,63,94,0.15)] select-none">
+                    <span className="h-2 w-2 rounded-full bg-rose-400" />
+                    Inscrições Fechadas
+                  </div>
+                )}
+              </div>
+
               <p className="text-gray-300 text-sm md:text-base max-w-2xl mx-auto leading-relaxed font-sans">
                 Deseja integrar oficialmente o corpo de pesquisadores, peritos acadêmicos e participar de simulados presenciais da Liga Acadêmica de Ciências Forenses da Universidade Federal Fluminense? Realize sua inscrição preenchendo o formulário oficial no link abaixo.
               </p>
@@ -882,24 +1039,52 @@ export default function App() {
 
             <div className="p-8 md:p-12 rounded-3xl glassmorphism border border-white/10 max-w-2xl mx-auto relative overflow-hidden shadow-2xl space-y-6">
               {/* Visual laser scanners for design */}
-              <div className="absolute top-0 left-0 w-full h-[3px] bg-yellow-400/60 shadow-[0_0_15px_rgba(255,208,0,0.8)] animate-pulse" />
+              {content.selectiveProcess.isOpen !== false ? (
+                <div className="absolute top-0 left-0 w-full h-[3px] bg-emerald-500/60 shadow-[0_0_15px_rgba(16,185,129,0.8)] animate-pulse" />
+              ) : (
+                <div className="absolute top-0 left-0 w-full h-[3px] bg-rose-500/60 shadow-[0_0_15px_rgba(244,63,94,0.8)] animate-pulse" />
+              )}
               
               <p className="text-gray-300 text-xs md:text-sm font-sans font-medium">
-                Caso as inscrições estejam temporariamente encerradas, as respostas enviadas servirão como cadastro de reserva de vagas de custódia técnico-científica.
+                {content.selectiveProcess.isOpen !== false ? (
+                  "As inscrições online para o processo seletivo da liga de Ciências Forenses estão abertas. Preencha todos os campos do formulário atentamente até a data limite."
+                ) : (
+                  "Inscrições encerradas temporariamente. Eventuais respostas enviadas através de canais secundários servirão como cadastro de reserva sob critérios acadêmicos de custódia técnico-científica."
+                )}
               </p>
 
-              {content.selectiveProcess.subscriptionUrl ? (
-                <a 
-                  href={content.selectiveProcess.subscriptionUrl}
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-yellow-400 hover:bg-yellow-300 text-black font-mono font-black text-xs md:text-sm uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(255,208,0,0.25)] hover:shadow-[0_0_30px_rgba(255,208,0,0.45)] transition-all cursor-pointer w-full sm:w-auto"
-                >
-                  PREENCHER FORMULÁRIO DE INSCRIÇÃO (GOOGLE FORMS) <ExternalLink className="h-4 w-4 shrink-0" />
-                </a>
+              {content.selectiveProcess.isOpen !== false ? (
+                content.selectiveProcess.subscriptionUrl ? (
+                  <a 
+                    href={content.selectiveProcess.subscriptionUrl}
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center justify-center gap-2 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-black font-mono font-black text-xs md:text-sm uppercase tracking-wider rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.25)] hover:shadow-[0_0_30px_rgba(16,185,129,0.45)] transition-all cursor-pointer w-full sm:w-auto"
+                  >
+                    PREENCHER FORMULÁRIO DE INSCRIÇÃO <ExternalLink className="h-4 w-4 shrink-0" />
+                  </a>
+                ) : (
+                  <div className="py-2 px-4 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-400 font-mono inline-block">
+                    🔒 FORMULÁRIO INDISPONÍVEL NO MOMENTO (AGUARDANDO EDITAIS)
+                  </div>
+                )
               ) : (
-                <div className="py-2 px-4 rounded-xl bg-white/5 border border-white/10 text-xs text-gray-400 font-mono inline-block">
-                  🔒 FORMULÁRIO INDISPONÍVEL NO MOMENTO (AGUARDANDO EDITAIS)
+                <div className="space-y-3">
+                  <div className="py-3 px-6 bg-rose-950/20 border border-rose-500/20 rounded-xl font-mono text-[11px] text-rose-400 inline-block">
+                    🔒 INSCRIÇÕES FECHADAS (PROCESSO ENCERRADO)
+                  </div>
+                  {content.selectiveProcess.subscriptionUrl && (
+                    <div className="block mt-2">
+                      <a
+                        href={content.selectiveProcess.subscriptionUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[10px] font-mono text-gray-500 hover:text-rose-400 underline transition-all"
+                      >
+                        Visualizar formulário fora de prazo (Apenas Leitura)
+                      </a>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
@@ -924,81 +1109,131 @@ export default function App() {
               </p>
             </div>
 
-            {/* Optimized 3-column interactive contact layout */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto text-white">
+            {/* Beautiful 5-column interactive contact layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 max-w-7xl mx-auto text-white">
               
               {/* Instagram Card */}
               <a 
-                href={content.contact.instagram}
+                href="https://www.instagram.com/lacif.da.uff?igsh=dXo5ODlrbDBqcGMx"
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="p-8 rounded-3xl glassmorphism border border-white/10 hover:border-yellow-400/40 hover:shadow-[0_0_20px_rgba(255,208,0,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
+                className="p-6 rounded-3xl glassmorphism border border-white/10 hover:border-pink-500/40 hover:shadow-[0_0_20px_rgba(236,72,153,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
               >
                 <div className="space-y-4">
-                  <div className="bg-yellow-400/10 h-12 w-12 rounded-2xl flex items-center justify-center text-yellow-500 border border-yellow-400/20 group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300 shrink-0">
-                    <Instagram className="h-6 w-6" />
+                  <div className="bg-pink-500/10 h-11 w-11 rounded-2xl flex items-center justify-center text-pink-500 border border-pink-500/20 group-hover:bg-gradient-to-tr group-hover:from-pink-500 group-hover:to-amber-500 group-hover:text-black transition-all duration-300 shrink-0">
+                    <Instagram className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Instagram Oficial</h4>
-                    <p className="text-lg font-sans font-bold text-white mt-1 group-hover:text-yellow-400 transition-colors">@lacifuff.oficial</p>
-                    <p className="text-xs text-gray-400 font-sans mt-2 leading-relaxed">
-                      Siga nossa página para acompanhar as análises, novidades das disciplinas e notícias de processos seletivos.
+                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Instagram</h4>
+                    <p className="text-sm font-sans font-bold text-white mt-1 group-hover:text-yellow-400 transition-colors">@lacif.da.uff</p>
+                    <p className="text-[11px] text-gray-400 font-sans mt-2 leading-relaxed">
+                      Siga nosso perfil para acompanhar rotinas práticas, infográficos e editais seletivos semanais.
                     </p>
                   </div>
                 </div>
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-yellow-400 hover:text-yellow-300">
-                  <span>SEGUIR NO INSTAGRAM</span>
-                  <ArrowUpRight className="h-4 w-4" />
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-pink-400 group-hover:text-pink-300 transition-colors">
+                  <span>SEGUIR</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </div>
+              </a>
+
+              {/* Facebook Card */}
+              <a 
+                href="https://www.facebook.com/share/18nVKjdrfX/"
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-6 rounded-3xl glassmorphism border border-white/10 hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(59,130,246,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
+              >
+                <div className="space-y-4">
+                  <div className="bg-blue-600/10 h-11 w-11 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shrink-0">
+                    <Facebook className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Facebook</h4>
+                    <p className="text-sm font-sans font-bold text-white mt-1 group-hover:text-blue-400 transition-colors">LACiF UFF</p>
+                    <p className="text-[11px] text-gray-400 font-sans mt-2 leading-relaxed">
+                      Conecte-se com nossa comunidade acadêmica e receba artigos e fotos de simpósios científicos oficiais.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-blue-400 group-hover:text-blue-300 transition-colors">
+                  <span>CONECTAR</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
+                </div>
+              </a>
+
+              {/* Twitter / X Card */}
+              <a 
+                href="https://x.com/DaLacif"
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-6 rounded-3xl glassmorphism border border-white/10 hover:border-zinc-400/40 hover:shadow-[0_0_20px_rgba(255,255,255,0.05)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
+              >
+                <div className="space-y-4">
+                  <div className="bg-zinc-800/20 h-11 w-11 rounded-2xl flex items-center justify-center text-zinc-300 border border-white/10 group-hover:bg-white group-hover:text-black transition-all duration-300 shrink-0">
+                    <Twitter className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Twitter / X</h4>
+                    <p className="text-sm font-sans font-bold text-white mt-1 group-hover:text-zinc-300 transition-colors">@DaLacif</p>
+                    <p className="text-[11px] text-gray-400 font-sans mt-2 leading-relaxed">
+                      Boletins periciais concisos, notícias do campo criminal e notas rápidas do mundo científico.
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-zinc-400 group-hover:text-white transition-colors">
+                  <span>MENCIONAR</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
               </a>
 
               {/* YouTube Card */}
               <a 
-                href={content.contact.youtube}
+                href="https://www.youtube.com/@lacifdauff4802"
                 target="_blank" 
                 rel="noopener noreferrer" 
-                className="p-8 rounded-3xl glassmorphism border border-white/10 hover:border-blue-500/40 hover:shadow-[0_0_20px_rgba(0,123,255,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
+                className="p-6 rounded-3xl glassmorphism border border-white/10 hover:border-red-500/40 hover:shadow-[0_0_20px_rgba(239,68,68,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
               >
                 <div className="space-y-4">
-                  <div className="bg-blue-600/10 h-12 w-12 rounded-2xl flex items-center justify-center text-blue-400 border border-blue-500/20 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300 shrink-0">
-                    <Youtube className="h-6 w-6" />
+                  <div className="bg-red-600/10 h-11 w-11 rounded-2xl flex items-center justify-center text-red-500 border border-red-500/20 group-hover:bg-red-600 group-hover:text-white transition-all duration-300 shrink-0">
+                    <Youtube className="h-5 w-5" />
                   </div>
                   <div>
-                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">Canal de Seminários</h4>
-                    <p className="text-lg font-sans font-bold text-white mt-1 group-hover:text-blue-400 transition-colors">LACIF UFF Forensics</p>
-                    <p className="text-xs text-gray-400 font-sans mt-2 leading-relaxed">
-                      Assista nossas aulas abertasgravadas, simpósios científicos passados, debates em mesa redonda e webinars didáticos.
+                    <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">YouTube</h4>
+                    <p className="text-sm font-sans font-bold text-white mt-1 group-hover:text-red-500 transition-colors">@lacifdauff4802</p>
+                    <p className="text-[11px] text-gray-400 font-sans mt-2 leading-relaxed">
+                      Aulas públicas, webinars interativos gravados e documentários rápidos produzidos pela liga.
                     </p>
                   </div>
                 </div>
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-blue-400 hover:text-white">
-                  <span>ACESSAR PLAYLISTS</span>
-                  <ArrowUpRight className="h-4 w-4" />
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-red-400 group-hover:text-red-300 transition-colors">
+                  <span>INSCREVER-SE</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
               </a>
 
               {/* E-mail Card */}
               <a 
                 href={`mailto:${content.contact.email}`}
-                className="p-8 rounded-3xl glassmorphism border border-white/10 hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left"
+                className="p-6 rounded-3xl glassmorphism border border-white/10 hover:border-emerald-500/40 hover:shadow-[0_0_20px_rgba(16,185,129,0.1)] flex flex-col justify-between transition-all duration-300 group cursor-pointer text-left animate-pulse hover:animate-none"
               >
                 <div className="space-y-4">
-                  <div className="bg-emerald-500/10 h-12 w-12 rounded-2xl flex items-center justify-center text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-black transition-all duration-300 shrink-0">
-                    <Mail className="h-6 w-6" />
+                  <div className="bg-emerald-500/10 h-11 w-11 rounded-2xl flex items-center justify-center text-emerald-400 border border-emerald-500/20 group-hover:bg-emerald-500 group-hover:text-black transition-all duration-300 shrink-0">
+                    <Mail className="h-5 w-5" />
                   </div>
                   <div>
                     <h4 className="font-display font-semibold text-xs text-gray-500 uppercase tracking-widest">E-mail Institucional</h4>
-                    <p className="text-base font-mono text-white mt-1 group-hover:text-emerald-400 transition-colors break-all leading-tight">
+                    <p className="text-xs font-mono text-white mt-1 group-hover:text-emerald-400 transition-colors break-all leading-tight font-bold">
                       {content.contact.email}
                     </p>
-                    <p className="text-xs text-gray-400 font-sans mt-2 leading-relaxed">
-                      Canal oficial direcionado a outras entidades acadêmicas, editores, órgãos governamentais ou dúvidas sobre admissões.
+                    <p className="text-[11px] text-gray-400 font-sans mt-2 leading-relaxed">
+                      Dúvidas administrativas formais, palestras institucionais de ofício ou propostas de pesquisas acadêmicas.
                     </p>
                   </div>
                 </div>
-                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-xs font-mono text-emerald-400 hover:text-emerald-300">
-                  <span>ENVIAR E-MAIL DE OFÍCIO</span>
-                  <ArrowUpRight className="h-4 w-4" />
+                <div className="mt-6 pt-4 border-t border-white/5 flex items-center justify-between text-[11px] font-mono text-emerald-400 group-hover:text-emerald-300 transition-colors">
+                  <span>ENVIAR E-MAIL</span>
+                  <ArrowUpRight className="h-3.5 w-3.5 transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
                 </div>
               </a>
 
@@ -1019,12 +1254,12 @@ export default function App() {
           <div className="flex items-center gap-2 text-white">
             <Fingerprint className="h-5 w-5 text-blue-500" />
             <span className="font-display font-bold text-sm tracking-wider">
-              LACIF <span className="text-yellow-400 font-mono">UFF</span>
+              LACiF <span className="text-yellow-400 font-mono">UFF</span>
             </span>
           </div>
 
           <p className="text-gray-500 text-center text-[11px]">
-            © {new Date().getFullYear()} LACIF UFF. Ciências Forenses ao Serviço da Verdade e do Ensino Público Fluminense.
+            © {new Date().getFullYear()} LACiF UFF. Ciências Forenses ao Serviço da Verdade e do Ensino Público Fluminense.
           </p>
 
           <div className="flex gap-4">
@@ -1053,6 +1288,7 @@ export default function App() {
           onUpdateContent={handleUpdateContent}
           onClose={() => setShowAdmin(false)}
           onResetToDefaults={handleResetToDefaults}
+          dbStatus={dbStatus}
         />
       )}
 

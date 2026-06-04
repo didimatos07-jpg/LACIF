@@ -125,7 +125,7 @@ export default function VocationalTest({ questions, results }: VocationalTestPro
 
           {/* Security note footer */}
           <div className="flex justify-between font-mono text-[9px] text-gray-600 mt-8 border-t border-white/5 pt-4">
-            <span>SISTEMA DE DIAGNÓSTICO: LACIF v5.2</span>
+            <span>SISTEMA DE DIAGNÓSTICO: LACiF v5.2</span>
             <span>CRIPTO-SOMA ATIVA</span>
           </div>
         </div>

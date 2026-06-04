@@ -91,6 +91,7 @@ export interface SelectiveProcess {
     event: string;
     date: string;
   }[];
+  isOpen?: boolean;
 }
 
 export interface ContactInfo {
@@ -100,6 +101,20 @@ export interface ContactInfo {
   whatsapp: string;
   email: string;
   address: string;
+}
+
+export interface AcademicModule {
+  id: string;
+  tag: string;
+  title: string;
+  description: string;
+  skills: string[];
+}
+
+export interface AcademicPillar {
+  id: string;
+  title: string;
+  description: string;
 }
 
 export interface SiteContent {
@@ -112,6 +127,8 @@ export interface SiteContent {
   historyImage: string;
   directors: Director[];
   specialties: ForensicSpecialty[];
+  academicModules?: AcademicModule[];
+  academicPillars?: AcademicPillar[];
   vocationalQuestions: VocationalQuestion[];
   vocationalResults: Record<string, VocationalResult>;
   quizQuestions: QuizQuestion[];
@@ -123,4 +140,79 @@ export interface SiteContent {
   contact: ContactInfo;
   googleDriveUrl?: string;
   libraryDriveUrl?: string;
+  escapeRoomConfig?: EscapeRoomConfig;
+  escapeRoomRankings?: EscapeRoomRanking[];
+  quizRankings?: QuizRanking[];
+}
+
+export interface QuizRanking {
+  name: string;
+  score: number;
+  totalQuestions: number;
+  date: string;
+  email?: string;
+  classification?: string;
+}
+
+export interface EscapeRoomRoom {
+  id: string;
+  name: string;
+  theme: string;
+  challengeTitle: string;
+  challengeDesc: string;
+  vestigios?: string; // Vestígios do caso
+  difficulty?: 'Fácil' | 'Médio' | 'Difícil'; // Dificuldade do caso
+  isActive?: boolean; // Se a questão está ativa no jogo
+  order?: number; // Ordem da questão
+  question: string;
+  options: string[];
+  correctAnswerIndex: number;
+  explanation: string;
+  optionExplanations?: string[];
+  mediaUrl?: string;
+  mediaType?: 'image' | 'video' | 'pdf';
+  curiosity: string;
+}
+
+export interface EscapeRoomCase {
+  id: string;
+  title: string;
+  story: string;
+  finalCulpritIndex: number;
+  culpritOptions: string[];
+}
+
+export interface EscapeRoomAchievement {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+}
+
+export interface EscapeRoomRanking {
+  name: string;
+  score: number;
+  time: string;
+  date: string;
+  classification: string;
+}
+
+export interface EscapeRoomConfig {
+  introText: string;
+  rooms: EscapeRoomRoom[];
+  cases: EscapeRoomCase[];
+  achievements: EscapeRoomAchievement[];
+  pointsPerCorrect: number;
+  pointsPerIncorrect: number;
+  pointsPerRoom: number;
+  pointsPerGame: number;
+  stats?: {
+    totalAccesses?: number;
+    totalCompleted?: number;
+    totalCorrectAttempts?: number;
+    totalAttempts?: number;
+    completedGames?: number;
+    averageAccuracy?: number;
+    averageScore?: number;
+  };
 }

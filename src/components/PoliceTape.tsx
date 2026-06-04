@@ -35,7 +35,7 @@ export default function PoliceTape({ rotated = false }: PoliceTapeProps) {
         <div className="marquee-container-tape text-black font-mono font-black text-[11px] tracking-[0.15em] uppercase flex gap-12 shrink-0">
           {[...Array(4)].map((_, i) => (
             <span key={i} className="flex items-center gap-10 whitespace-nowrap">
-              <span>⚠️ POLÍCIA CIENTÍFICA LACIF UFF • CENA DE CRIME • NÃO ULTRAPASSE</span>
+              <span>⚠️ POLÍCIA CIENTÍFICA LACiF UFF • CENA DE CRIME • NÃO ULTRAPASSE</span>
               <span className="text-[13px]">///</span>
               <span>⚠️ CRIME SCENE • DO NOT CROSS • LAW & SCIENCE</span>
               <span className="text-[13px]">\\\</span>
